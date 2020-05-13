@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">TienMusic</string>
+    <string name="title_favorite">Favorite</string>
+    <string name="title_track">Track</string>
+    <string name="title_my_music">My music</string>
+    <string name="action_play_music_random">Play Music Random</string>
+    <string name="time">00:00</string>
+    <string name="title_title">Title :</string>
+    <string name="title_artist">Artist :</string>
+    <string name="title_genre">Genre :</string>
+    <string name="title_playlist">Playlist</string>
+    <string name="action_download">Download</string>
+    <string name="action_favorite">Favorite</string>
+    <string name="action_share">Share</string>
+</resources>

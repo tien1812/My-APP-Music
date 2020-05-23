@@ -12,4 +12,9 @@ public class StringUtils {
                 .format(new Date(duration));
         return time;
     }
+
+    public static String formatQuery(String query) {
+        String title = query.replace(" ", "%20");
+        return title;
+    }
 }

@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+
         <variable
             name="playmusic"
             type="vn.tien.tienmusic.ui.play.PlayMusicActivity" />
@@ -11,7 +12,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/color_pink"
+        android:background="@drawable/background_play"
         android:orientation="vertical"
         android:weightSum="10">
 
@@ -26,7 +27,8 @@
             android:id="@+id/view_pager_play"
             android:layout_width="match_parent"
             android:layout_height="@dimen/dp_0"
-            android:layout_weight="8"></androidx.viewpager.widget.ViewPager>
+            android:layout_weight="8">
+        </androidx.viewpager.widget.ViewPager>
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -36,10 +38,10 @@
 
             <SeekBar
                 android:id="@+id/seek_bar"
+                style="@style/Widget.AppCompat.SeekBar"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/dp_32"
-                android:layout_marginEnd="@dimen/dp_32"
+                android:thumbTint="@color/color_black"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
@@ -49,7 +51,7 @@
                 android:id="@+id/btn_play"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dp_24"
+                android:layout_marginTop="@dimen/dp_32"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/seek_bar"
@@ -60,7 +62,7 @@
                 android:layout_width="@dimen/dp_32"
                 android:layout_height="@dimen/dp_32"
                 android:layout_marginStart="@dimen/dp_24"
-                android:layout_marginTop="@dimen/dp_32"
+                android:layout_marginTop="@dimen/dp_40"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/seek_bar"
                 app:srcCompat="@drawable/ic_shuffle_black_24dp" />
@@ -69,7 +71,7 @@
                 android:id="@+id/image_pre"
                 android:layout_width="@dimen/dp_32"
                 android:layout_height="@dimen/dp_32"
-                android:layout_marginTop="@dimen/dp_32"
+                android:layout_marginTop="@dimen/dp_40"
                 android:layout_marginEnd="@dimen/dp_32"
                 app:layout_constraintEnd_toStartOf="@+id/btn_play"
                 app:layout_constraintTop_toBottomOf="@+id/seek_bar"
@@ -80,7 +82,7 @@
                 android:layout_width="@dimen/dp_32"
                 android:layout_height="@dimen/dp_32"
                 android:layout_marginStart="@dimen/dp_32"
-                android:layout_marginTop="@dimen/dp_32"
+                android:layout_marginTop="@dimen/dp_40"
                 app:layout_constraintStart_toEndOf="@+id/btn_play"
                 app:layout_constraintTop_toBottomOf="@+id/seek_bar"
                 app:srcCompat="@drawable/ic_skip_next_black_24dp" />
@@ -89,7 +91,7 @@
                 android:id="@+id/image_repeat"
                 android:layout_width="@dimen/dp_32"
                 android:layout_height="@dimen/dp_32"
-                android:layout_marginTop="@dimen/dp_32"
+                android:layout_marginTop="@dimen/dp_40"
                 android:layout_marginEnd="@dimen/dp_24"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.814"
@@ -105,7 +107,7 @@
                 android:layout_marginTop="@dimen/dp_4"
                 android:layout_marginBottom="@dimen/dp_8"
                 android:text="@string/time"
-                android:textColor="@color/color_white"
+                android:textColor="@color/color_black"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toTopOf="@+id/image_random"
                 app:layout_constraintStart_toStartOf="parent"
@@ -119,7 +121,7 @@
                 android:layout_marginEnd="@dimen/dp_8"
                 android:layout_marginBottom="@dimen/dp_8"
                 android:text="@string/time"
-                android:textColor="@color/color_white"
+                android:textColor="@color/color_black"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toTopOf="@+id/image_repeat"
                 app:layout_constraintEnd_toEndOf="parent"

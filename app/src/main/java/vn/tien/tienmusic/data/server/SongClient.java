@@ -8,7 +8,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class SongClient {
     private static Retrofit sRetrofit;
-    private static final String BASE_URL = "https://api.soundcloud.com";
+    private static final String BASE_URL = "https://api.soundcloud.com/";
 
     public static Retrofit getInstance(Context context) {
         if (sRetrofit == null) {

@@ -56,6 +56,7 @@ public class User extends BaseObservable implements Parcelable {
         mID = ID;
     }
 
+
     @Bindable
     public String getUserName() {
         return mUserName;

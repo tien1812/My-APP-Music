@@ -40,6 +40,10 @@ public class AvatarFragment extends Fragment {
                 into(mImageViewAvatar);
     }
 
+    public void startAnimator(){
+        mAnimator.resume();
+    }
+
     private void initView() {
         mImageViewAvatar = mAvatarBinding.imageAvatar;
         mAnimator = ObjectAnimator.ofFloat(mImageViewAvatar, Constant.TYPE_ANIMATOR, 0f, 360f);
@@ -48,5 +52,9 @@ public class AvatarFragment extends Fragment {
         mAnimator.setRepeatCount(ValueAnimator.INFINITE);
         mAnimator.setInterpolator(new LinearInterpolator());
         mAnimator.start();
+    }
+
+    public void pauseAnimator(){
+        mAnimator.pause();
     }
 }

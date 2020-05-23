@@ -9,4 +9,12 @@ public interface SongDataSource {
     interface remote {
         Observable<List<Song>> getAllSongs();
     }
+
+    interface local {
+        Observable<List<Song>> getAllSongsLocal();
+    }
+
+    interface search {
+        Observable<List<Song>> getSearchSong(String query);
+    }
 }

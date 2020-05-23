@@ -8,16 +8,19 @@
             type="vn.tien.tienmusic.ui.track.TrackFragment" />
     </data>
 
-    <LinearLayout
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
+
+        <ProgressBar
+            android:id="@+id/process_bar"
+            android:layout_width="@dimen/dp_60"
+            android:layout_height="@dimen/dp_60"
+            android:layout_gravity="center" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycle_songs"
-            android:background="@color/color_light_pink"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
-
-    </LinearLayout>
+    </FrameLayout>
 </layout>

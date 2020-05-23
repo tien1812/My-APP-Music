@@ -1,7 +1,9 @@
 package vn.tien.tienmusic.ui.favorite;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +19,7 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import vn.tien.tienmusic.R;
@@ -34,6 +37,7 @@ public class FavoriteFragment extends Fragment {
     private RecyclerView mRecyclerFav;
     private SongFavViewModel mSongFavViewModel;
     private Bundle mBundle;
+    private ClickListenerItem mListenerItem;
 
     @Nullable
     @Override
@@ -42,6 +46,12 @@ public class FavoriteFragment extends Fragment {
                 R.layout.fragment_favorite, container, false);
         initView();
         return mFavoriteBinding.getRoot();
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        mListenerItem = (ClickListenerItem) context;
     }
 
     private void initView() {
@@ -53,6 +63,8 @@ public class FavoriteFragment extends Fragment {
             @Override
             public void onChanged(List<Song> songs) {
                 mAdapter.setData(songs);
+                mBundle.putParcelableArrayList(Constant.BUNDLE_LIST,
+                        (ArrayList<? extends Parcelable>) songs);
             }
         });
         mRecyclerFav.setAdapter(mAdapter);
@@ -63,11 +75,12 @@ public class FavoriteFragment extends Fragment {
         mRecyclerFav.addItemDecoration(dividerItemDecoration);
         mAdapter.setClickListener(new ClickListenerItem() {
             @Override
-            public void onClick( int position) {
+            public void onClick(Song song, int position) {
                 Intent intent = PlayMusicActivity.getIntent(getContext());
                 mBundle.putInt(Constant.POSITION_SONG, position);
                 intent.putExtras(mBundle);
                 startActivity(intent);
+                mListenerItem.onClick(song,position);
             }
         });
 
@@ -88,6 +101,5 @@ public class FavoriteFragment extends Fragment {
             }
         });
         helper.attachToRecyclerView(mRecyclerFav);
-
     }
 }

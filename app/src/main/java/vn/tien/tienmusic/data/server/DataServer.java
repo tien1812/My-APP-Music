@@ -4,11 +4,14 @@ import java.util.List;
 
 import io.reactivex.Observable;
 import retrofit2.http.GET;
-import vn.tien.tienmusic.BuildConfig;
+import retrofit2.http.Query;
+import vn.tien.tienmusic.constant.Constant;
 import vn.tien.tienmusic.data.model.Song;
 
 public interface DataServer {
-    @GET("/tracks?client_id=" + BuildConfig.API_KEY)
+    @GET("tracks" + Constant.CLIENT_ID)
     Observable<List<Song>> getAllSongs();
 
+    @GET("tracks")
+    Observable<List<Song>> getSongsSearch(@Query("client_id") String key, @Query("q") String query);
 }

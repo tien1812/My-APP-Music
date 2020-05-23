@@ -1,10 +1,12 @@
 package vn.tien.tienmusic.ui.mymusic;
 
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,6 +23,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
 
 import vn.tien.tienmusic.R;
 import vn.tien.tienmusic.constant.ClickListenerItem;
@@ -28,26 +31,53 @@ import vn.tien.tienmusic.constant.Constant;
 import vn.tien.tienmusic.data.model.Song;
 import vn.tien.tienmusic.data.model.User;
 import vn.tien.tienmusic.databinding.FragmentMymusicBinding;
-import vn.tien.tienmusic.ui.play.PlayMusicActivity;
 import vn.tien.tienmusic.ui.adapter.TrackAdapter;
+import vn.tien.tienmusic.ui.play.PlayMusicActivity;
 
 public class MyMusicFragment extends Fragment {
-    private ArrayList<Song> mMyMusics = new ArrayList<>();
+    private List<Song> mMyMusics;
     private User mUser;
     private FragmentMymusicBinding mMymusicBinding;
     private TrackAdapter mAdapter;
     private RecyclerView mRecyclerMusics;
+    private ClickListenerItem mListenerItem;
 
     @Nullable
     @Override
-
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mMymusicBinding = DataBindingUtil.inflate(inflater,
                 R.layout.fragment_mymusic, container, false);
+        mMyMusics = new ArrayList<>();
         initView();
         getSongs();
         setRecycleView();
         return mMymusicBinding.getRoot();
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        mListenerItem = (ClickListenerItem) context;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
     }
 
     private void setRecycleView() {
@@ -66,13 +96,15 @@ public class MyMusicFragment extends Fragment {
         });
         mAdapter.setClickListener(new ClickListenerItem() {
             @Override
-            public void onClick(int position) {
+            public void onClick(Song song, int position) {
                 Intent intent = PlayMusicActivity.getIntent(getContext());
                 Bundle bundle = new Bundle();
-                bundle.putParcelableArrayList(Constant.BUNDLE_LIST, mMyMusics);
+                bundle.putParcelableArrayList(Constant.BUNDLE_LIST,
+                        (ArrayList<? extends Parcelable>) mMyMusics);
                 bundle.putInt(Constant.POSITION_SONG, position);
                 intent.putExtras(bundle);
                 startActivity(intent);
+                mListenerItem.onClick(song, position);
             }
         });
     }

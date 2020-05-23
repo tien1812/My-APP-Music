@@ -1,11 +1,14 @@
 package vn.tien.tienmusic.ui.track;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -35,6 +38,9 @@ public class TrackFragment extends Fragment {
     private FragmentTrackBinding mBinding;
     private SongViewModel mSongViewModel;
     private Bundle mBundle;
+    private Intent mIntent;
+    private ClickListenerItem mListenerItem;
+    private ProgressBar mProgressBar;
 
     @Nullable
     @Override
@@ -44,10 +50,19 @@ public class TrackFragment extends Fragment {
         mBinding.setBinding(this);
         mBundle = new Bundle();
         setUpRecycler();
+        Log.d("tag", "onCreateView: ");
         return mBinding.getRoot();
     }
 
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        Log.d("tag", "onAttach: ");
+        mListenerItem = (ClickListenerItem) context;
+    }
+
     private void setUpRecycler() {
+        mProgressBar = mBinding.processBar;
         mRecyclerSongs = mBinding.recycleSongs;
         mTrackAdapter = new TrackAdapter();
         mSongViewModel = ViewModelProviders.of(getActivity()).get(SongViewModel.class);
@@ -56,6 +71,7 @@ public class TrackFragment extends Fragment {
             @Override
             public void onChanged(List<Song> songs) {
                 mTrackAdapter.setData(songs);
+                mProgressBar.setVisibility(View.GONE);
                 mBundle.putParcelableArrayList(Constant.BUNDLE_LIST,
                         (ArrayList<? extends Parcelable>) songs);
             }
@@ -69,11 +85,12 @@ public class TrackFragment extends Fragment {
         mRecyclerSongs.setItemViewCacheSize(Constant.CACHE_SIZE);
         mTrackAdapter.setClickListener(new ClickListenerItem() {
             @Override
-            public void onClick(int position) {
-                Intent intent = PlayMusicActivity.getIntent(getContext());
+            public void onClick(Song song, int position) {
+                mIntent = PlayMusicActivity.getIntent(getContext());
                 mBundle.putInt(Constant.POSITION_SONG, position);
-                intent.putExtras(mBundle);
-                startActivity(intent);
+                mIntent.putExtras(mBundle);
+                mListenerItem.onClick(song, position);
+                startActivity(mIntent);
             }
         });
     }

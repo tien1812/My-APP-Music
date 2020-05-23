@@ -21,6 +21,10 @@ public class TrackAdapter extends RecyclerView.Adapter<TrackAdapter.TrackHoder> 
     private static ClickListenerItem sClickListener;
     private ItemTrackBinding mTrackBinding;
 
+    public List<Song> getSongs() {
+        return mSongs;
+    }
+
     public void setData(List<Song> songs) {
         mSongs = songs;
         notifyDataSetChanged();
@@ -67,7 +71,7 @@ public class TrackAdapter extends RecyclerView.Adapter<TrackAdapter.TrackHoder> 
                 public void onClick(View view) {
                     final int position = getAdapterPosition();
                     if (sClickListener != null) {
-                        sClickListener.onClick(position);
+                        sClickListener.onClick(mBinding.getSong(), position);
                     }
                 }
             });

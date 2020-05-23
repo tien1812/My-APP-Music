@@ -5,8 +5,10 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -31,13 +33,15 @@ import vn.tien.tienmusic.R;
 import vn.tien.tienmusic.constant.Constant;
 import vn.tien.tienmusic.constant.ListenerServer;
 import vn.tien.tienmusic.constant.MediaPlayerState;
+import vn.tien.tienmusic.constant.OnListenerItemPlaylist;
 import vn.tien.tienmusic.data.model.Song;
 import vn.tien.tienmusic.databinding.ActivityPlayBinding;
-import vn.tien.tienmusic.service.PlayMusicService;
+import vn.tien.tienmusic.service.MusicService;
 import vn.tien.tienmusic.utils.StringUtils;
 import vn.tien.tienmusic.viewmodel.SongFavViewModel;
 
-public class PlayMusicActivity extends AppCompatActivity implements View.OnClickListener, ListenerServer {
+public class PlayMusicActivity extends AppCompatActivity implements View.OnClickListener,
+        ListenerServer, OnListenerItemPlaylist {
     private ActivityPlayBinding mBinding;
     private Toolbar mToolbar;
     private TextView mTextDuration, mTextTime;
@@ -47,13 +51,14 @@ public class PlayMusicActivity extends AppCompatActivity implements View.OnClick
     private ViewPager mViewPager;
     private ServiceConnection mServiceConnection;
     private Boolean mBound;
-    private PlayMusicService mMusicService;
+    private MusicService mMusicService;
     private FloatingActionButton mBtnPlay;
-    private ImageView mBtnNext, mBtnPre, mBtnRandom, mBtnRepeat;
+    private ImageView mBtnNext, mBtnPre, mBtnRandom, mBtnRepeat,mBtnFavorite;
     public static ArrayList<Song> mSongs = new ArrayList<>();
-    public int mPosSong;
+    public static int mPosSong;
     private SeekBar mSeekBar;
     private SongFavViewModel mSongFavViewModel;
+    private UpDateSeekbar mUpDateSeekbar;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -111,14 +116,14 @@ public class PlayMusicActivity extends AppCompatActivity implements View.OnClick
         mServiceConnection = new ServiceConnection() {
             @Override
             public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
-                if (iBinder instanceof PlayMusicService.MusicBinder) {
-                    mMusicService = ((PlayMusicService.MusicBinder) iBinder).getService();
+                if (iBinder instanceof MusicService.MusicBinder) {
+                    mMusicService = ((MusicService.MusicBinder) iBinder).getService();
                     mBound = true;
                     mMusicService.setSongs(mSongs);
                     mMusicService.setCurrentIndex(mPosSong);
                     mMusicService.setOnListenerServer(PlayMusicActivity.this);
-                    upDateUi();
                     playOrPause();
+                    upDateUi();
                 } else {
                     mBound = false;
                 }
@@ -129,7 +134,7 @@ public class PlayMusicActivity extends AppCompatActivity implements View.OnClick
                 mBound = false;
             }
         };
-        Intent intent = new Intent(this, PlayMusicService.class);
+        Intent intent = new Intent(this, MusicService.class);
         bindService(intent, mServiceConnection, Service.BIND_AUTO_CREATE);
     }
 
@@ -150,6 +155,7 @@ public class PlayMusicActivity extends AppCompatActivity implements View.OnClick
         switch (item.getItemId()) {
             case R.id.menu_favorite:
                 addSongFav();
+                item.setIcon(R.drawable.ic_favorite_red_24dp);
                 break;
             default:
                 break;
@@ -193,8 +199,12 @@ public class PlayMusicActivity extends AppCompatActivity implements View.OnClick
     private void repeatSong() {
         mMusicService.repeatSong();
         if (mMusicService.isRepeat() == true) {
+            Toast.makeText(PlayMusicActivity.this, "Repeat : On",
+                    Toast.LENGTH_SHORT).show();
             mBtnRepeat.setImageResource(R.drawable.ic_loop_accent_24dp);
         } else {
+            Toast.makeText(PlayMusicActivity.this, "Repeat : Off",
+                    Toast.LENGTH_SHORT).show();
             mBtnRepeat.setImageResource(R.drawable.ic_loop_black_24dp);
         }
     }
@@ -202,8 +212,10 @@ public class PlayMusicActivity extends AppCompatActivity implements View.OnClick
     private void randomSong() {
         mMusicService.randomSong();
         if (mMusicService.isRandom() == true) {
+            Toast.makeText(PlayMusicActivity.this, "Random : On", Toast.LENGTH_SHORT).show();
             mBtnRandom.setImageResource(R.drawable.ic_shuffle_accent_24dp);
         } else {
+            Toast.makeText(PlayMusicActivity.this, "Random : Off", Toast.LENGTH_SHORT).show();
             mBtnRandom.setImageResource(R.drawable.ic_shuffle_black_24dp);
         }
     }
@@ -228,8 +240,11 @@ public class PlayMusicActivity extends AppCompatActivity implements View.OnClick
         }
         if (mMusicService.getState() == MediaPlayerState.PLAYING) {
             mBtnPlay.setImageLevel(Constant.IMAGE_LEVEL_PLAY);
-        } else
+            mAvatarFragment.pauseAnimator();
+        } else {
             mBtnPlay.setImageLevel(Constant.IMAGE_LEVEL_PAUSE);
+            mAvatarFragment.startAnimator();
+        }
         mMusicService.playSong();
     }
 
@@ -238,16 +253,12 @@ public class PlayMusicActivity extends AppCompatActivity implements View.OnClick
     }
 
     @Override
-    protected void onDestroy() {
-        unbindService(mServiceConnection);
-        mBound = false;
-        super.onDestroy();
-    }
-
-    @Override
     public void upDateUi() {
         if (!mBound) {
             return;
+        }
+        if (mUpDateSeekbar == null) {
+            upDateSeekbar();
         }
         this.runOnUiThread(new Runnable() {
             @Override
@@ -261,7 +272,77 @@ public class PlayMusicActivity extends AppCompatActivity implements View.OnClick
                         getCurrentSong().getTrackType());
                 String time = StringUtils.formatDuration(getCurrentSong().getDuration());
                 mTextDuration.setText(time);
+                mSeekBar.setMax(getCurrentSong().getDuration());
             }
         });
+    }
+
+    private void upDateSeekbar() {
+        mUpDateSeekbar = new UpDateSeekbar();
+        mUpDateSeekbar.execute();
+        mSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                mMusicService.seekTo(seekBar);
+            }
+        });
+    }
+
+    @Override
+    public void onClick(int position) {
+        mMusicService.playSong(position);
+        upDateUi();
+    }
+
+    private class UpDateSeekbar extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            while (true) {
+                if (isCancelled()) {
+                    break;
+                }
+                try {
+                    Thread.sleep(Constant.DELAY_TIME);
+                    publishProgress();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            return null;
+        }
+
+        @Override
+        protected void onProgressUpdate(Void... values) {
+            mTextTime.setText(StringUtils.formatDuration(mMusicService.getCurrentTime()));
+            mSeekBar.setProgress(mMusicService.getCurrentTime());
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.d("taggg", "onStop:Playmusic ");
+    }
+
+    @Override
+    protected void onDestroy() {
+        unbindService(mServiceConnection);
+        mBound = false;
+        if (mUpDateSeekbar != null) {
+            mUpDateSeekbar.cancel(true);
+        }
+        super.onDestroy();
+        Log.d("taggg", "onDestroy:Playmusic ");
     }
 }

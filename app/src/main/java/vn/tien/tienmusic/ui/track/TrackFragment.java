@@ -39,7 +39,6 @@ public class TrackFragment extends Fragment {
     private SongViewModel mSongViewModel;
     private Bundle mBundle;
     private Intent mIntent;
-    private ClickListenerItem mListenerItem;
     private ProgressBar mProgressBar;
 
     @Nullable
@@ -49,7 +48,6 @@ public class TrackFragment extends Fragment {
                 R.layout.fragment_track, container, false);
         mBinding.setBinding(this);
         mBundle = new Bundle();
-        setUpRecycler();
         Log.d("tag", "onCreateView: ");
         return mBinding.getRoot();
     }
@@ -57,8 +55,12 @@ public class TrackFragment extends Fragment {
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        Log.d("tag", "onAttach: ");
-        mListenerItem = (ClickListenerItem) context;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        setUpRecycler();
     }
 
     private void setUpRecycler() {
@@ -89,7 +91,6 @@ public class TrackFragment extends Fragment {
                 mIntent = PlayMusicActivity.getIntent(getContext());
                 mBundle.putInt(Constant.POSITION_SONG, position);
                 mIntent.putExtras(mBundle);
-                mListenerItem.onClick(song, position);
                 startActivity(mIntent);
             }
         });

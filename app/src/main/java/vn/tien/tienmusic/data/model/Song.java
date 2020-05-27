@@ -64,8 +64,8 @@ public class Song extends BaseObservable implements Parcelable {
     }
 
     @Ignore
-    public Song(long id, String title, int duration, String streamUrl, User user,
-                String genre, String trackType) {
+    public Song(long id, String title, int duration, String streamUrl, User user, String genre,
+                String trackType) {
         mId = id;
         mTitle = title;
         mDuration = duration;
@@ -171,6 +171,6 @@ public class Song extends BaseObservable implements Parcelable {
         parcel.writeString(mStreamUrl);
         parcel.writeString(mTrackType);
         parcel.writeInt(mDuration);
-        parcel.writeParcelable(mUser,i);
+        parcel.writeParcelable(mUser, i);
     }
 }

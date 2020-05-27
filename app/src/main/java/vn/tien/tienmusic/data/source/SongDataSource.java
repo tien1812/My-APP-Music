@@ -10,11 +10,7 @@ public interface SongDataSource {
         Observable<List<Song>> getAllSongs();
     }
 
-    interface local {
-        Observable<List<Song>> getAllSongsLocal();
-    }
-
     interface search {
-        Observable<List<Song>> getSearchSong(String query);
+       Observable<List<Song>> getSearchSong(String query);
     }
 }

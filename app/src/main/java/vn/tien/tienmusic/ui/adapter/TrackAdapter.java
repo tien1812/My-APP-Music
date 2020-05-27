@@ -21,8 +21,7 @@ public class TrackAdapter extends RecyclerView.Adapter<TrackAdapter.TrackHoder> 
     private static ClickListenerItem sClickListener;
     private ItemTrackBinding mTrackBinding;
 
-    public List<Song> getSongs() {
-        return mSongs;
+    public TrackAdapter() {
     }
 
     public void setData(List<Song> songs) {

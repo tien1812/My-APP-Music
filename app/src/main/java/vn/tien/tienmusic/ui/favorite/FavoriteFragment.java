@@ -1,6 +1,5 @@
 package vn.tien.tienmusic.ui.favorite;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -37,21 +36,50 @@ public class FavoriteFragment extends Fragment {
     private RecyclerView mRecyclerFav;
     private SongFavViewModel mSongFavViewModel;
     private Bundle mBundle;
-    private ClickListenerItem mListenerItem;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mFavoriteBinding = DataBindingUtil.inflate(inflater,
                 R.layout.fragment_favorite, container, false);
-        initView();
         return mFavoriteBinding.getRoot();
     }
 
     @Override
-    public void onAttach(@NonNull Context context) {
-        super.onAttach(context);
-        mListenerItem = (ClickListenerItem) context;
+    public void onStart() {
+        super.onStart();
+        initView();
+        setClickItem();
+    }
+
+    private void setClickItem() {
+        mAdapter.setClickListener(new ClickListenerItem() {
+            @Override
+            public void onClick(Song song, int position) {
+                Intent intent = PlayMusicActivity.getIntent(getContext());
+                mBundle.putInt(Constant.POSITION_SONG, position);
+                intent.putExtras(mBundle);
+                startActivity(intent);
+            }
+        });
+
+        ItemTouchHelper helper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0,
+                ItemTouchHelper.RIGHT) {
+            @Override
+            public boolean onMove(@NonNull RecyclerView recyclerView,
+                                  @NonNull RecyclerView.ViewHolder viewHolder,
+                                  @NonNull RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+                int position = viewHolder.getAdapterPosition();
+                Song song = mAdapter.getSongAtPosition(position);
+                mSongFavViewModel.deleteSong(song);
+            }
+        });
+        helper.attachToRecyclerView(mRecyclerFav);
     }
 
     private void initView() {
@@ -73,33 +101,5 @@ public class FavoriteFragment extends Fragment {
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(getContext(),
                 DividerItemDecoration.VERTICAL);
         mRecyclerFav.addItemDecoration(dividerItemDecoration);
-        mAdapter.setClickListener(new ClickListenerItem() {
-            @Override
-            public void onClick(Song song, int position) {
-                Intent intent = PlayMusicActivity.getIntent(getContext());
-                mBundle.putInt(Constant.POSITION_SONG, position);
-                intent.putExtras(mBundle);
-                startActivity(intent);
-                mListenerItem.onClick(song,position);
-            }
-        });
-
-        ItemTouchHelper helper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0,
-                ItemTouchHelper.RIGHT) {
-            @Override
-            public boolean onMove(@NonNull RecyclerView recyclerView,
-                                  @NonNull RecyclerView.ViewHolder viewHolder,
-                                  @NonNull RecyclerView.ViewHolder target) {
-                return false;
-            }
-
-            @Override
-            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-                int position = viewHolder.getAdapterPosition();
-                Song song = mAdapter.getSongAtPosition(position);
-                mSongFavViewModel.deleteSong(song);
-            }
-        });
-        helper.attachToRecyclerView(mRecyclerFav);
     }
 }

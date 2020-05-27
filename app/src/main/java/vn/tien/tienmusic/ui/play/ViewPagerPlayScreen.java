@@ -25,6 +25,10 @@ public class ViewPagerPlayScreen extends FragmentPagerAdapter {
         return mFragments.get(position);
     }
 
+    public List<Fragment> getFragments() {
+        return mFragments;
+    }
+
     @Override
     public int getCount() {
         return mFragments == null ? 0 : mFragments.size();

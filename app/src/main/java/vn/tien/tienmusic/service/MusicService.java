@@ -2,7 +2,6 @@ package vn.tien.tienmusic.service;
 
 import android.app.Service;
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Binder;
@@ -133,18 +132,6 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
         } else mRepeat = false;
     }
 
-    @Override
-    public void onRebind(Intent intent) {
-        Log.d("tagg", "onRebind: ");
-        super.onRebind(intent);
-    }
-
-    @Override
-    public boolean onUnbind(Intent intent) {
-        Log.d("tagg", "onUnbind");
-        return super.onUnbind(intent);
-    }
-
     public void playSong(int position) {
         mCurrentIndex = position;
         stopSong();
@@ -202,10 +189,10 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
     }
 
     @Override
-    public void unbindService(ServiceConnection conn) {
-        super.unbindService(conn);
-        mPlayer.stop();
-        mPlayer.release();
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d("service", "onDestroy: ");
+        Log.d("service",String.valueOf(getState()));
+        stopSong();
     }
-
 }

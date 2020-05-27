@@ -14,7 +14,7 @@ public class StringUtils {
     }
 
     public static String formatQuery(String query) {
-        String title = query.replace(" ", "%20");
+        String title = query.replace(" ", "%20").trim();
         return title;
     }
 }

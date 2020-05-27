@@ -1,8 +1,6 @@
 <resources>
     <string name="app_name">NVT Music</string>
-    <string name="title_favorite">Favorite</string>
-    <string name="title_track">Track</string>
-    <string name="title_my_music">My music</string>
+    <string name="title_home">Trang chủ</string>
     <string name="action_play_music_random">Play Music Random</string>
     <string name="time">00:00</string>
     <string name="title_title">Title :</string>
@@ -12,4 +10,6 @@
     <string name="action_download">Download</string>
     <string name="action_favorite">Favorite</string>
     <string name="action_share">Share</string>
+    <string name="search">Tìm kiếm</string>
+    <string name="favorite">Yêu thích</string>
 </resources>

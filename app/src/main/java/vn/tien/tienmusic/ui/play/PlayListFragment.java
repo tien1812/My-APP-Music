@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -26,7 +25,6 @@ import vn.tien.tienmusic.ui.adapter.TrackAdapter;
 public class PlayListFragment extends Fragment {
     private FragmentPlaylistBinding mPlaylistBinding;
     private RecyclerView mRecyclerPlaylist;
-    private TextView mTextTitle, mTextArtist, mTextGenre;
     private TrackAdapter mListAdapter;
     private OnListenerItemPlaylist mListenerItemPlaylist;
 
@@ -64,24 +62,7 @@ public class PlayListFragment extends Fragment {
         });
     }
 
-    public void setDatatoView(String title,
-                              String artist,
-                              String genre,
-                              String trackType) {
-        mTextTitle.setText(title);
-        mTextArtist.setText(artist);
-        if (genre != null) {
-            mTextGenre.setText(genre);
-        }
-        if (trackType != null) {
-            mTextGenre.setText(trackType);
-        }
-    }
-
     private void initView() {
         mRecyclerPlaylist = mPlaylistBinding.recyclePlaylist;
-        mTextTitle = mPlaylistBinding.titleSong;
-        mTextArtist = mPlaylistBinding.artist;
-        mTextGenre = mPlaylistBinding.genre;
     }
 }

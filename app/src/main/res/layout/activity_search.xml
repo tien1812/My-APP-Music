@@ -8,6 +8,7 @@
     </data>
 
     <RelativeLayout
+        android:background="@color/color_black"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".ui.SearchActivity">
@@ -26,11 +27,13 @@
 
             <androidx.appcompat.widget.SearchView
                 android:id="@+id/search_songs"
+                app:queryHint="Tìm kiếm bài hát , Ca sĩ..."
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/dp_32"
                 android:background="@drawable/background_search"
-                app:iconifiedByDefault="false" />
+                app:iconifiedByDefault="false"
+                />
         </androidx.appcompat.widget.Toolbar>
 
         <TextView
@@ -40,19 +43,20 @@
             android:layout_below="@+id/tool_bar"
             android:layout_marginLeft="@dimen/dp_8"
             android:text="Kết quả cho :"
-            android:textColor="@color/color_black"
-            android:textSize="@dimen/dp_32"
+            android:textColor="@color/color_white"
+            android:textSize="@dimen/dp_24"
             android:visibility="invisible" />
 
         <TextView
+            android:layout_marginRight="@dimen/dp_8"
             android:id="@+id/title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/tool_bar"
             android:layout_marginLeft="@dimen/dp_8"
             android:layout_toRightOf="@+id/text_kq"
-            android:textColor="@color/color_black"
-            android:textSize="@dimen/dp_32" />
+            android:textColor="@color/color_white"
+            android:textSize="@dimen/dp_24" />
 
         <FrameLayout
             android:layout_width="match_parent"

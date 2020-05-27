@@ -120,7 +120,7 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
     @Override
     public boolean onQueryTextSubmit(String query) {
         mTextKq.setVisibility(View.VISIBLE);
-        mTextTitle.setText(query);
+        mTextTitle.setText(query.trim());
         String title = StringUtils.formatQuery(query);
         mProgressBar.setVisibility(View.VISIBLE);
         searchSong(title);
@@ -129,7 +129,8 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
 
     @Override
     public boolean onQueryTextChange(String newText) {
-        return false;
+        mTrackAdapter.setData(null);
+        return true;
     }
 
 }

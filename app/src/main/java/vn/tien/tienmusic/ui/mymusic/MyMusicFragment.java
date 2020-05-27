@@ -1,7 +1,6 @@
 package vn.tien.tienmusic.ui.mymusic;
 
 import android.content.ContentResolver;
-import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -40,7 +39,6 @@ public class MyMusicFragment extends Fragment {
     private FragmentMymusicBinding mMymusicBinding;
     private TrackAdapter mAdapter;
     private RecyclerView mRecyclerMusics;
-    private ClickListenerItem mListenerItem;
 
     @Nullable
     @Override
@@ -48,10 +46,15 @@ public class MyMusicFragment extends Fragment {
         mMymusicBinding = DataBindingUtil.inflate(inflater,
                 R.layout.fragment_mymusic, container, false);
         mMyMusics = new ArrayList<>();
-        initView();
         getSongs();
-        setRecycleView();
         return mMymusicBinding.getRoot();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        initView();
+        setRecycleView();
     }
 
     @Override
@@ -62,12 +65,6 @@ public class MyMusicFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-    }
-
-    @Override
-    public void onAttach(@NonNull Context context) {
-        super.onAttach(context);
-        mListenerItem = (ClickListenerItem) context;
     }
 
     @Override
@@ -104,7 +101,6 @@ public class MyMusicFragment extends Fragment {
                 bundle.putInt(Constant.POSITION_SONG, position);
                 intent.putExtras(bundle);
                 startActivity(intent);
-                mListenerItem.onClick(song, position);
             }
         });
     }

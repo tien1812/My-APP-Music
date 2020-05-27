@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="color_pink">#FEB9B9</color>
-    <color name="color_primary_dark">#3700B3</color>
-    <color name="color_accent">#76F0B3</color>
+    <color name="color_primary_dark">#E125B0</color>
+    <color name="color_accent">#D6100B</color>
     <color name="color_yellow">#FFEB3B</color>
     <color name="color_white">#FFFFFF</color>
-    <color name="color_black">#3A4164</color>
+    <color name="color_black">#050407</color>
+    <color name="color_gray">#607D8B</color>
+    <color name="color_red">#D6100B</color>
+    <color name="color_violet">#CC7CFD</color>
 </resources>

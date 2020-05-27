@@ -6,13 +6,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -23,27 +18,19 @@ import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 
-import com.bumptech.glide.Glide;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import vn.tien.tienmusic.R;
-import vn.tien.tienmusic.constant.ClickListenerItem;
 import vn.tien.tienmusic.constant.Constant;
-import vn.tien.tienmusic.data.model.Song;
 import vn.tien.tienmusic.databinding.ActivityMainBinding;
 import vn.tien.tienmusic.ui.favorite.FavoriteFragment;
 import vn.tien.tienmusic.ui.mymusic.MyMusicFragment;
 import vn.tien.tienmusic.ui.track.TrackFragment;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener, ClickListenerItem {
+public class MainActivity extends AppCompatActivity {
     private BottomNavigationView mBottomNavView;
     private ActivityMainBinding mMainBinding;
     private Toolbar mToolbar;
-    private ImageView mAvatar;
-    private TextView mTextTrack;
-    private TextView mTextArtist;
-    private RelativeLayout mLayoutPlay;
-    private ImageView mBtnPlay;
     private TrackFragment mTrackFragment;
     private MyMusicFragment mMyMusicFragment;
     private FavoriteFragment mFavoriteFragment;
@@ -53,15 +40,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         mMainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         initView();
-        register();
         setSelectBotNavView();
         setUpToolBar();
         checkPermission();
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                 mTrackFragment).commit();
     }
@@ -88,19 +69,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void initView() {
         mBottomNavView = mMainBinding.botNav;
         mToolbar = mMainBinding.toolBarMain;
-        mAvatar = mMainBinding.imgTrack;
-        mTextTrack = mMainBinding.textTrack;
-        mTextArtist = mMainBinding.textArtist;
-        mLayoutPlay = mMainBinding.layoutPlay;
-        mBtnPlay = mMainBinding.imgPlay;
         mTrackFragment = new TrackFragment();
         mMyMusicFragment = new MyMusicFragment();
         mFavoriteFragment = new FavoriteFragment();
-    }
-
-    private void register() {
-        mBtnPlay.setOnClickListener(this);
-        mLayoutPlay.setOnClickListener(this);
     }
 
     @Override
@@ -175,42 +146,4 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    @Override
-    public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.btn_play:
-                break;
-            case R.id.layout_play:
-                break;
-            default:
-                break;
-        }
-    }
-
-    @Override
-    public void onClick(Song song, int position) {
-        if (song == null) {
-            return;
-        } else {
-            mLayoutPlay.setVisibility(View.VISIBLE);
-            Glide.with(mAvatar.getContext()).load(song.getUser().getAvatarUrl())
-                    .placeholder(R.drawable.cd)
-                    .into(mAvatar);
-            mTextTrack.setText(song
-                    .getTitle());
-            mTextArtist.setText(song.getUser().getUserName());
-        }
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        Log.d("taggg", "onStop: ");
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        Log.d("taggg", "onDestroy: MainActivity");
-    }
 }

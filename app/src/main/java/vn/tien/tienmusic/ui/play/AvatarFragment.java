@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.LinearInterpolator;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -24,6 +25,7 @@ public class AvatarFragment extends Fragment {
     private FragmentAvatarBinding mAvatarBinding;
     private CircleImageView mImageViewAvatar;
     private ObjectAnimator mAnimator;
+    private TextView mTextTitle , mTextArtist;
 
     @Nullable
     @Override
@@ -35,9 +37,11 @@ public class AvatarFragment extends Fragment {
     }
 
 
-    public void setAvatar(String url) {
+    public void setAvatar(String url,String title,String artist) {
         Glide.with(getContext()).load(url).placeholder(R.drawable.cd).
                 into(mImageViewAvatar);
+        mTextTitle.setText(title);
+        mTextArtist.setText(artist);
     }
 
     public void startAnimator(){
@@ -46,6 +50,8 @@ public class AvatarFragment extends Fragment {
 
     private void initView() {
         mImageViewAvatar = mAvatarBinding.imageAvatar;
+        mTextArtist = mAvatarBinding.textArtist;
+        mTextTitle = mAvatarBinding.textTitle;
         mAnimator = ObjectAnimator.ofFloat(mImageViewAvatar, Constant.TYPE_ANIMATOR, 0f, 360f);
         mAnimator.setDuration(Constant.ANIMATOR_DURATION_TIME);
         mAnimator.setRepeatMode(ValueAnimator.RESTART);

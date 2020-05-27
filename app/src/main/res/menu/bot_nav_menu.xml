@@ -1,15 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/item_track"
-        android:icon="@drawable/ic_music_note_black_24dp"
-        android:title="@string/title_track" />
+        android:icon="@drawable/ic_home"
+        android:title="@string/title_home" />
     <item
         android:id="@+id/item_personal"
-        android:icon="@drawable/ic_person_black_24dp"
-        android:title="@string/title_my_music" />
+        android:icon="@drawable/ic_music"
+        android:title="Thư viện" />
     <item
         android:id="@+id/item_favorite"
         android:icon="@drawable/ic_favorite_black_24dp"
-        android:title="@string/title_favorite" />
+        android:title="@string/favorite" />
+    <item
+        android:id="@+id/item_search"
+        android:icon="@drawable/ic_search"
+        android:title="@string/search" />
 </menu>

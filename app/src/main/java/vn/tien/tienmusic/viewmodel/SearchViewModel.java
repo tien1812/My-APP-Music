@@ -31,10 +31,8 @@ public class SearchViewModel extends ViewModel {
     }
 
     public LiveData<List<Song>> getSongSearchs(String query) {
-        if (mSongData == null) {
-            mSongData = new MutableLiveData<List<Song>>();
-            loadSongs(query);
-        }
+        mSongData = new MutableLiveData<List<Song>>();
+        loadSongs(query);
         return mSongData;
     }
 

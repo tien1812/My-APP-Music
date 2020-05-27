@@ -9,15 +9,12 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -53,12 +50,13 @@ public class PlayMusicActivity extends AppCompatActivity implements View.OnClick
     private Boolean mBound;
     private MusicService mMusicService;
     private FloatingActionButton mBtnPlay;
-    private ImageView mBtnNext, mBtnPre, mBtnRandom, mBtnRepeat,mBtnFavorite;
+    private ImageView mBtnNext, mBtnPre, mBtnRandom, mBtnRepeat, mBtnFavorite;
     public static ArrayList<Song> mSongs = new ArrayList<>();
     public static int mPosSong;
     private SeekBar mSeekBar;
     private SongFavViewModel mSongFavViewModel;
     private UpDateSeekbar mUpDateSeekbar;
+    private ImageView mImageFavorite;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -87,6 +85,8 @@ public class PlayMusicActivity extends AppCompatActivity implements View.OnClick
         mBtnRepeat = mBinding.imageRepeat;
         mBtnRepeat.setOnClickListener(this);
         mSeekBar = mBinding.seekBar;
+        mImageFavorite = mBinding.imageFavorite;
+        mImageFavorite.setOnClickListener(this);
         mSongFavViewModel = ViewModelProviders.of(this).get(SongFavViewModel.class);
     }
 
@@ -98,8 +98,8 @@ public class PlayMusicActivity extends AppCompatActivity implements View.OnClick
 
     private void setToolbar() {
         setSupportActionBar(mToolbar);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
         mToolbar.setNavigationIcon(R.drawable.ic_keyboard_backspace_black_24dp);
     }
 
@@ -144,28 +144,10 @@ public class PlayMusicActivity extends AppCompatActivity implements View.OnClick
         return super.onSupportNavigateUp();
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.play_music_menu, menu);
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.menu_favorite:
-                addSongFav();
-                item.setIcon(R.drawable.ic_favorite_red_24dp);
-                break;
-            default:
-                break;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
     private void addSongFav() {
-        Toast.makeText(PlayMusicActivity.this, "Favorited", Toast.LENGTH_SHORT).show();
-        mSongFavViewModel.addSong(getCurrentSong());
+            Toast.makeText(PlayMusicActivity.this, "Favorited", Toast.LENGTH_SHORT).show();
+            mSongFavViewModel.addSong(getCurrentSong());
+            mImageFavorite.setImageResource(R.drawable.ic_favorite_red_24dp);
     }
 
     public static Intent getIntent(Context context) {
@@ -191,6 +173,8 @@ public class PlayMusicActivity extends AppCompatActivity implements View.OnClick
             case R.id.image_repeat:
                 repeatSong();
                 break;
+            case R.id.image_favorite:
+                addSongFav();
             default:
                 break;
         }
@@ -263,13 +247,8 @@ public class PlayMusicActivity extends AppCompatActivity implements View.OnClick
         this.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                mAvatarFragment.setAvatar(getCurrentSong().getUser().getAvatarUrl());
-                mToolbar.setTitle(getCurrentSong().getTitle());
-                mPlayListFragment.setDatatoView(
-                        getCurrentSong().getTitle(),
-                        getCurrentSong().getUser().getUserName(),
-                        getCurrentSong().getGenre(),
-                        getCurrentSong().getTrackType());
+                mAvatarFragment.setAvatar(getCurrentSong().getUser().getAvatarUrl(),
+                        getCurrentSong().getTitle(), getCurrentSong().getUser().getUserName());
                 String time = StringUtils.formatDuration(getCurrentSong().getDuration());
                 mTextDuration.setText(time);
                 mSeekBar.setMax(getCurrentSong().getDuration());
@@ -327,12 +306,6 @@ public class PlayMusicActivity extends AppCompatActivity implements View.OnClick
             mTextTime.setText(StringUtils.formatDuration(mMusicService.getCurrentTime()));
             mSeekBar.setProgress(mMusicService.getCurrentTime());
         }
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        Log.d("taggg", "onStop:Playmusic ");
     }
 
     @Override

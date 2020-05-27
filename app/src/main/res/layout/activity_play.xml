@@ -10,38 +10,37 @@
     </data>
 
     <LinearLayout
+        android:padding="@dimen/dp_8"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/background_play"
+        android:background ="@color/color_gray"
         android:orientation="vertical"
         android:weightSum="10">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/tool_bar_play"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            app:title=" "
-            app:titleTextColor="@color/color_black" />
+            android:layout_height="?attr/actionBarSize" />
 
         <androidx.viewpager.widget.ViewPager
             android:id="@+id/view_pager_play"
             android:layout_width="match_parent"
             android:layout_height="@dimen/dp_0"
-            android:layout_weight="8">
-        </androidx.viewpager.widget.ViewPager>
+            android:layout_weight="7"></androidx.viewpager.widget.ViewPager>
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="@dimen/dp_0"
             android:layout_gravity="bottom"
-            android:layout_weight="2">
+            android:layout_weight="3">
 
             <SeekBar
                 android:id="@+id/seek_bar"
                 style="@style/Widget.AppCompat.SeekBar"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:thumbTint="@color/color_black"
+                android:layout_marginTop="@dimen/dp_60"
+                android:thumb="@color/color_red"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
@@ -107,7 +106,7 @@
                 android:layout_marginTop="@dimen/dp_4"
                 android:layout_marginBottom="@dimen/dp_8"
                 android:text="@string/time"
-                android:textColor="@color/color_black"
+                android:textColor="@color/color_white"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toTopOf="@+id/image_random"
                 app:layout_constraintStart_toStartOf="parent"
@@ -121,13 +120,31 @@
                 android:layout_marginEnd="@dimen/dp_8"
                 android:layout_marginBottom="@dimen/dp_8"
                 android:text="@string/time"
-                android:textColor="@color/color_black"
+                android:textColor="@color/color_white"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toTopOf="@+id/image_repeat"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/seek_bar" />
 
+            <ImageView
+                android:id="@+id/image_favorite"
+                android:layout_width="@dimen/dp_32"
+                android:layout_height="@dimen/dp_32"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="8dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ic_favorite_border_black_24dp" />
 
+            <ImageView
+                android:id="@+id/image_download"
+                android:layout_width="@dimen/dp_32"
+                android:layout_height="@dimen/dp_32"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="24dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ic_file_download_black_24dp" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </LinearLayout>
 </layout>

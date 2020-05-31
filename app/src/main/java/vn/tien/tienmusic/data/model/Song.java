@@ -41,6 +41,11 @@ public class Song extends BaseObservable implements Parcelable {
     @SerializedName("track_type")
     private String mTrackType;
 
+    @SerializedName("downloadable")
+    private boolean mDownloadAble;
+
+    private int mIsFavorite;
+
     @Bindable
     public long getId() {
         return mId;
@@ -73,6 +78,22 @@ public class Song extends BaseObservable implements Parcelable {
         mUser = user;
         mGenre = genre;
         mTrackType = trackType;
+    }
+
+    public boolean isDownloadAble() {
+        return mDownloadAble;
+    }
+
+    public void setDownloadAble(boolean downloadAble) {
+        mDownloadAble = downloadAble;
+    }
+
+    public int isFavorite() {
+        return mIsFavorite;
+    }
+
+    public void setIsFavorite(int isFavorite) {
+        mIsFavorite = isFavorite;
     }
 
     public Song(long id, String title, int duration, String uri, User user) {
@@ -161,6 +182,8 @@ public class Song extends BaseObservable implements Parcelable {
         mTrackType = in.readString();
         mDuration = in.readInt();
         mUser = in.readParcelable(User.class.getClassLoader());
+        mDownloadAble = in.readByte() != 0;
+        mIsFavorite = in.readInt();
     }
 
     @Override
@@ -172,5 +195,7 @@ public class Song extends BaseObservable implements Parcelable {
         parcel.writeString(mTrackType);
         parcel.writeInt(mDuration);
         parcel.writeParcelable(mUser, i);
+        parcel.writeByte((byte) (mDownloadAble ? 1 : 0));
+        parcel.writeInt(mIsFavorite);
     }
 }

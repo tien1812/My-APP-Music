@@ -12,4 +12,6 @@
     <string name="action_share">Share</string>
     <string name="search">Tìm kiếm</string>
     <string name="favorite">Yêu thích</string>
+    <string name="channel_name">chanel name</string>
+    <string name="channel_description">channel description</string>
 </resources>

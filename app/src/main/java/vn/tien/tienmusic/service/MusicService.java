@@ -1,7 +1,13 @@
 package vn.tien.tienmusic.service;
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Binder;
@@ -10,17 +16,21 @@ import android.util.Log;
 import android.widget.SeekBar;
 
 import androidx.annotation.Nullable;
+import androidx.core.app.NotificationCompat;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.Random;
 
+import vn.tien.tienmusic.R;
 import vn.tien.tienmusic.constant.ListenerServer;
 import vn.tien.tienmusic.constant.MediaPlayerState;
 import vn.tien.tienmusic.data.model.Song;
+import vn.tien.tienmusic.notification.NotificationAction;
+import vn.tien.tienmusic.ui.MainActivity;
 
 public class MusicService extends Service implements MediaPlayer.OnCompletionListener,
-        MediaPlayer.OnPreparedListener, ListenerServer {
+        MediaPlayer.OnPreparedListener, ListenerServer{
     private IBinder mIBinder;
     private MediaPlayer mPlayer;
     private int mState;
@@ -39,6 +49,7 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
         mPlayer.setOnPreparedListener(this);
         mPlayer.setOnCompletionListener(this);
         mPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+
     }
 
     @Nullable
@@ -136,6 +147,7 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
         mCurrentIndex = position;
         stopSong();
         playSong();
+        mState = MediaPlayerState.PLAYING;
     }
 
     public void playSong() {
@@ -191,8 +203,5 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Log.d("service", "onDestroy: ");
-        Log.d("service",String.valueOf(getState()));
-        stopSong();
     }
 }

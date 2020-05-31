@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -51,6 +52,21 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
         initView();
         setUpRecycleView();
         registerListener();
+        Log.d("tagg","onCreate Search");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mTrackAdapter.setClickListener(new ClickListenerItem() {
+            @Override
+            public void onClick(Song song, int position) {
+                mIntent = PlayMusicActivity.getIntent(getApplicationContext());
+                mBundle.putInt(Constant.POSITION_SONG, position);
+                mIntent.putExtras(mBundle);
+                startActivity(mIntent);
+            }
+        });
     }
 
     private void searchSong(String query) {
@@ -76,15 +92,6 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
                 DividerItemDecoration.VERTICAL);
         mRecyclerSearch.addItemDecoration(dividerItemDecoration);
         mRecyclerSearch.setItemViewCacheSize(Constant.CACHE_SIZE);
-        mTrackAdapter.setClickListener(new ClickListenerItem() {
-            @Override
-            public void onClick(Song song, int position) {
-                mIntent = PlayMusicActivity.getIntent(getApplicationContext());
-                mBundle.putInt(Constant.POSITION_SONG, position);
-                mIntent.putExtras(mBundle);
-                startActivity(mIntent);
-            }
-        });
     }
 
     private void initView() {

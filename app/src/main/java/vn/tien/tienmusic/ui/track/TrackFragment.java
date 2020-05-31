@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -26,6 +27,7 @@ import java.util.List;
 import vn.tien.tienmusic.R;
 import vn.tien.tienmusic.constant.ClickListenerItem;
 import vn.tien.tienmusic.constant.Constant;
+import vn.tien.tienmusic.constant.OnListenerFavorite;
 import vn.tien.tienmusic.data.model.Song;
 import vn.tien.tienmusic.databinding.FragmentTrackBinding;
 import vn.tien.tienmusic.ui.adapter.TrackAdapter;
@@ -40,10 +42,14 @@ public class TrackFragment extends Fragment {
     private Bundle mBundle;
     private Intent mIntent;
     private ProgressBar mProgressBar;
+    private OnListenerFavorite mOnListenerFavorite;
+    private TextView mTextView;
+    private ClickListenerItem mListenerItem;
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         mBinding = DataBindingUtil.inflate(inflater,
                 R.layout.fragment_track, container, false);
         mBinding.setBinding(this);
@@ -55,6 +61,8 @@ public class TrackFragment extends Fragment {
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
+        mOnListenerFavorite = (OnListenerFavorite) context;
+        mListenerItem = (ClickListenerItem) context;
     }
 
     @Override
@@ -64,20 +72,39 @@ public class TrackFragment extends Fragment {
     }
 
     private void setUpRecycler() {
-        mProgressBar = mBinding.processBar;
-        mRecyclerSongs = mBinding.recycleSongs;
-        mTrackAdapter = new TrackAdapter();
+        mTextView = mBinding.textMore;
+        mTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mSongViewModel = ViewModelProviders.of(getActivity()).get(SongViewModel.class);
+                mSongViewModel.initViewModel(getContext());
+                mSongViewModel.getSongs().observe(getActivity(), new Observer<List<Song>>() {
+                    @Override
+                    public void onChanged(List<Song> songs) {
+                        mTrackAdapter.setData(songs);
+                        mProgressBar.setVisibility(View.GONE);
+                        mBundle.putParcelableArrayList(Constant.BUNDLE_LIST,
+                                (ArrayList<? extends Parcelable>) songs);
+                    }
+                });
+            }
+        });
         mSongViewModel = ViewModelProviders.of(getActivity()).get(SongViewModel.class);
         mSongViewModel.initViewModel(getContext());
         mSongViewModel.getSongs().observe(this, new Observer<List<Song>>() {
             @Override
             public void onChanged(List<Song> songs) {
-                mTrackAdapter.setData(songs);
+                List<Song> songs1 = new ArrayList<>();
+                songs1.addAll(songs.subList(0, 4));
+                mTrackAdapter.setData(songs1);
                 mProgressBar.setVisibility(View.GONE);
                 mBundle.putParcelableArrayList(Constant.BUNDLE_LIST,
                         (ArrayList<? extends Parcelable>) songs);
             }
         });
+        mProgressBar = mBinding.processBar;
+        mRecyclerSongs = mBinding.recycleSongs;
+        mTrackAdapter = new TrackAdapter();
         mRecyclerSongs.setAdapter(mTrackAdapter);
         mRecyclerSongs.setLayoutManager(new LinearLayoutManager(getContext()));
         mRecyclerSongs.setHasFixedSize(true);
@@ -92,7 +119,9 @@ public class TrackFragment extends Fragment {
                 mBundle.putInt(Constant.POSITION_SONG, position);
                 mIntent.putExtras(mBundle);
                 startActivity(mIntent);
+                mListenerItem.onClick(song,position);
             }
         });
+        mTrackAdapter.setListenerFavorite(mOnListenerFavorite);
     }
 }

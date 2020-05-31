@@ -30,15 +30,18 @@ import vn.tien.tienmusic.R;
 import vn.tien.tienmusic.constant.Constant;
 import vn.tien.tienmusic.constant.ListenerServer;
 import vn.tien.tienmusic.constant.MediaPlayerState;
+import vn.tien.tienmusic.constant.OnListenerFavorite;
 import vn.tien.tienmusic.constant.OnListenerItemPlaylist;
 import vn.tien.tienmusic.data.model.Song;
 import vn.tien.tienmusic.databinding.ActivityPlayBinding;
+import vn.tien.tienmusic.notification.NotificationAction;
 import vn.tien.tienmusic.service.MusicService;
+import vn.tien.tienmusic.ui.MainActivity;
 import vn.tien.tienmusic.utils.StringUtils;
 import vn.tien.tienmusic.viewmodel.SongFavViewModel;
 
 public class PlayMusicActivity extends AppCompatActivity implements View.OnClickListener,
-        ListenerServer, OnListenerItemPlaylist {
+        ListenerServer, OnListenerItemPlaylist, OnListenerFavorite {
     private ActivityPlayBinding mBinding;
     private Toolbar mToolbar;
     private TextView mTextDuration, mTextTime;
@@ -47,16 +50,17 @@ public class PlayMusicActivity extends AppCompatActivity implements View.OnClick
     private PlayListFragment mPlayListFragment;
     private ViewPager mViewPager;
     private ServiceConnection mServiceConnection;
-    private Boolean mBound;
+    private boolean mBound;
     private MusicService mMusicService;
     private FloatingActionButton mBtnPlay;
-    private ImageView mBtnNext, mBtnPre, mBtnRandom, mBtnRepeat, mBtnFavorite;
+    private ImageView mBtnNext, mBtnPre, mBtnRandom, mBtnRepeat;
     public static ArrayList<Song> mSongs = new ArrayList<>();
     public static int mPosSong;
     private SeekBar mSeekBar;
     private SongFavViewModel mSongFavViewModel;
     private UpDateSeekbar mUpDateSeekbar;
     private ImageView mImageFavorite;
+    private ImageView mImgDownLoad;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -67,6 +71,21 @@ public class PlayMusicActivity extends AppCompatActivity implements View.OnClick
         setToolbar();
         customViewPager();
         bindtoService();
+        getIntentFromNotification();
+        setFavorite();
+    }
+
+
+    private void setFavorite() {
+        if (mSongs.get(mPosSong).isFavorite() == 1) {
+            mImageFavorite.setImageResource(R.drawable.ic_favorite_red_24dp);
+        } else mImageFavorite.setImageResource(R.drawable.ic_favorite_border_black_24dp);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        overridePendingTransition(0,R.anim.back_play);
     }
 
     private void initView() {
@@ -87,7 +106,21 @@ public class PlayMusicActivity extends AppCompatActivity implements View.OnClick
         mSeekBar = mBinding.seekBar;
         mImageFavorite = mBinding.imageFavorite;
         mImageFavorite.setOnClickListener(this);
+        mImgDownLoad = mBinding.imageDownload;
         mSongFavViewModel = ViewModelProviders.of(this).get(SongFavViewModel.class);
+    }
+
+    private void getIntentFromNotification() {
+        Intent intent = getIntent();
+        if (intent == null) {
+            return;
+        }
+        if (intent.getAction() == null) {
+            return;
+        }
+        if (intent.getAction().equals(NotificationAction.MAIN_ACTION)) {
+            getIntent(this);
+        }
     }
 
     private void getData() {
@@ -100,7 +133,7 @@ public class PlayMusicActivity extends AppCompatActivity implements View.OnClick
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
-        mToolbar.setNavigationIcon(R.drawable.ic_keyboard_backspace_black_24dp);
+        mToolbar.setNavigationIcon(R.drawable.ic_keyboard_arrow_down_black_24dp);
     }
 
     private void customViewPager() {
@@ -145,9 +178,7 @@ public class PlayMusicActivity extends AppCompatActivity implements View.OnClick
     }
 
     private void addSongFav() {
-            Toast.makeText(PlayMusicActivity.this, "Favorited", Toast.LENGTH_SHORT).show();
-            mSongFavViewModel.addSong(getCurrentSong());
-            mImageFavorite.setImageResource(R.drawable.ic_favorite_red_24dp);
+        listenerFav(mImageFavorite, getCurrentSong());
     }
 
     public static Intent getIntent(Context context) {
@@ -281,6 +312,20 @@ public class PlayMusicActivity extends AppCompatActivity implements View.OnClick
     public void onClick(int position) {
         mMusicService.playSong(position);
         upDateUi();
+    }
+
+    @Override
+    public void listenerFav(ImageView imageView, Song song) {
+        if (song.isFavorite() == 0) {
+            mSongFavViewModel.addSong(song);
+            imageView.setImageResource(R.drawable.ic_favorite_red_24dp);
+            Toast.makeText(this, "Đã thêm vào danh sách yêu thích",
+                    Toast.LENGTH_SHORT).show();
+        } else {
+            mSongFavViewModel.deleteSong(song);
+            Toast.makeText(this, "Đã xoá khỏi danh sách yêu thích", Toast.LENGTH_SHORT).show();
+            imageView.setImageResource(R.drawable.ic_favorite_border_black_24dp);
+        }
     }
 
     private class UpDateSeekbar extends AsyncTask<Void, Void, Void> {

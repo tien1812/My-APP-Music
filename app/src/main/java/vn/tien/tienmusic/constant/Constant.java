@@ -15,4 +15,8 @@ public class Constant {
     public static final int IMAGE_LEVEL_PLAY = 1;
     public static final int IMAGE_LEVEL_PAUSE = 4;
     public static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 123;
+    public static final String PARA_MUSIC_GENRE = "charts?kind=top&genre=soundcloud%3Agenres%3A";
+    public static final String LIMIT = "limit";
+    public static final String PARA_OFFSET = "offset";
+    public static final String BASE_URL = "https://api-v2.soundcloud.com/";
 }

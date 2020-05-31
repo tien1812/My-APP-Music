@@ -12,11 +12,14 @@ public class SongClient {
 
     public static Retrofit getInstance(Context context) {
         if (sRetrofit == null) {
-            sRetrofit = new Retrofit.Builder()
-                    .baseUrl(BASE_URL)
-                    .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                    .addConverterFactory(GsonConverterFactory.create())
-                    .build();
+            synchronized (SongClient.class) {
+                sRetrofit = new Retrofit.Builder()
+                        .baseUrl(BASE_URL)
+                        .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                        .addConverterFactory(GsonConverterFactory.create())
+                        .build();
+            }
+
         }
         return sRetrofit;
     }

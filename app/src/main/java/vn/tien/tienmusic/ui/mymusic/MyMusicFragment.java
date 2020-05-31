@@ -1,6 +1,7 @@
 package vn.tien.tienmusic.ui.mymusic;
 
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -27,6 +28,7 @@ import java.util.List;
 import vn.tien.tienmusic.R;
 import vn.tien.tienmusic.constant.ClickListenerItem;
 import vn.tien.tienmusic.constant.Constant;
+import vn.tien.tienmusic.constant.OnListenerFavorite;
 import vn.tien.tienmusic.data.model.Song;
 import vn.tien.tienmusic.data.model.User;
 import vn.tien.tienmusic.databinding.FragmentMymusicBinding;
@@ -39,6 +41,8 @@ public class MyMusicFragment extends Fragment {
     private FragmentMymusicBinding mMymusicBinding;
     private TrackAdapter mAdapter;
     private RecyclerView mRecyclerMusics;
+    private OnListenerFavorite mOnListenerFavorite;
+    private ClickListenerItem mListenerItem;
 
     @Nullable
     @Override
@@ -58,23 +62,10 @@ public class MyMusicFragment extends Fragment {
     }
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        mOnListenerFavorite = (OnListenerFavorite) context;
+        mListenerItem = (ClickListenerItem) context;
     }
 
     private void setRecycleView() {
@@ -101,8 +92,10 @@ public class MyMusicFragment extends Fragment {
                 bundle.putInt(Constant.POSITION_SONG, position);
                 intent.putExtras(bundle);
                 startActivity(intent);
+                mListenerItem.onClick(song,position);
             }
         });
+        mAdapter.setListenerFavorite(mOnListenerFavorite);
     }
 
     private void initView() {

@@ -22,7 +22,7 @@
         android:supportsRtl="true"
         android:theme="@style/MyTheme">
         <activity
-            android:name=".ui.SearchActivity"
+            android:name=".ui.search.SearchFragment"
             android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity" />
         <activity

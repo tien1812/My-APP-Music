@@ -86,7 +86,7 @@ public class TrackAdapter extends RecyclerView.Adapter<TrackAdapter.TrackHoder> 
                 public void onClick(View view) {
                     final int position = getAdapterPosition();
                     if (sClickListener != null) {
-                        sClickListener.onClick(mBinding.getSong(), position);
+                        sClickListener.onClickItem(mBinding.getSong(), position);
                     }
                 }
             });

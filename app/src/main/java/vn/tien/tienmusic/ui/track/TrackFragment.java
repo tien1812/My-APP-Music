@@ -114,12 +114,12 @@ public class TrackFragment extends Fragment {
         mRecyclerSongs.setItemViewCacheSize(Constant.CACHE_SIZE);
         mTrackAdapter.setClickListener(new ClickListenerItem() {
             @Override
-            public void onClick(Song song, int position) {
+            public void onClickItem(Song song, int position) {
                 mIntent = PlayMusicActivity.getIntent(getContext());
                 mBundle.putInt(Constant.POSITION_SONG, position);
                 mIntent.putExtras(mBundle);
                 startActivity(mIntent);
-                mListenerItem.onClick(song,position);
+                mListenerItem.onClickItem(song,position);
             }
         });
         mTrackAdapter.setListenerFavorite(mOnListenerFavorite);

@@ -9,8 +9,8 @@ import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.os.Parcelable;
 import android.text.Html;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AnimationUtils;
@@ -32,6 +32,9 @@ import androidx.lifecycle.ViewModelProviders;
 import com.bumptech.glide.Glide;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import vn.tien.tienmusic.R;
 import vn.tien.tienmusic.constant.ClickListenerItem;
 import vn.tien.tienmusic.constant.Constant;
@@ -43,6 +46,7 @@ import vn.tien.tienmusic.databinding.ActivityMainBinding;
 import vn.tien.tienmusic.service.MusicService;
 import vn.tien.tienmusic.ui.favorite.FavoriteFragment;
 import vn.tien.tienmusic.ui.mymusic.MyMusicFragment;
+import vn.tien.tienmusic.ui.play.PlayMusicActivity;
 import vn.tien.tienmusic.ui.search.SearchFragment;
 import vn.tien.tienmusic.ui.track.TrackFragment;
 import vn.tien.tienmusic.viewmodel.SongFavViewModel;
@@ -77,14 +81,10 @@ public class MainActivity extends AppCompatActivity implements OnListenerFavorit
         bindToService();
     }
 
+
     private void registerListener() {
         mImgPause.setOnClickListener(this);
         mRelativeLayout.setOnClickListener(this);
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
     }
 
     private void bindToService() {
@@ -132,7 +132,7 @@ public class MainActivity extends AppCompatActivity implements OnListenerFavorit
         mTextArtist = mMainBinding.textArtist;
         mRelativeLayout = mMainBinding.layoutPlay;
         mTextTitle.startAnimation
-                (AnimationUtils.loadAnimation(MainActivity.this,R.anim.translate));
+                (AnimationUtils.loadAnimation(MainActivity.this, R.anim.translate));
     }
 
     @Override
@@ -225,7 +225,12 @@ public class MainActivity extends AppCompatActivity implements OnListenerFavorit
         this.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                updatePlayMini(mSongObservable.get());
+                mTextTitle.setText(getCurrentSong().getTitle());
+                mTextArtist.setText(getCurrentSong().getUser().getUserName());
+                Glide.with(mImgAvatar.getContext()).load(getCurrentSong().
+                        getUser().getAvatarUrl())
+                        .placeholder(R.drawable.cd)
+                        .into(mImgAvatar);
             }
         });
     }
@@ -245,20 +250,28 @@ public class MainActivity extends AppCompatActivity implements OnListenerFavorit
     }
 
     private void showPlaySong() {
-
+        Bundle bundle = new Bundle();
+        bundle.putParcelableArrayList(Constant.BUNDLE_LIST,
+                (ArrayList<? extends Parcelable>) getSongs());
+        bundle.putInt(Constant.POSITION_SONG,getCurrentIndex());
+        bundle.putInt(Constant.CURRENT_TIME_SONG,getCurrentTime());
+        Intent intent = PlayMusicActivity.getIntent(this);
+        intent.putExtras(bundle);
+        startActivity(intent);
+        overridePendingTransition(R.anim.start_play,0);
     }
 
     @Override
-    public void onClick(Song song, int position) {
-        mSongObservable.set(song);
-        updatePlayMini(mSongObservable.get());
+    public void onClickItem(Song song, int position) {
         mMusicService.stopSong();
+        mSongObservable.set(song);
+        updatePlayMini();
     }
 
-    private void updatePlayMini(Song song) {
+    private void updatePlayMini() {
         mTextTitle.setText(mSongObservable.get().getTitle());
         mTextArtist.setText(mSongObservable.get().getUser().getUserName());
-        Glide.with(mImgAvatar.getContext()).load(song.getUser().getAvatarUrl())
+        Glide.with(mImgAvatar.getContext()).load(mSongObservable.get().getUser().getAvatarUrl())
                 .placeholder(R.drawable.cd)
                 .into(mImgAvatar);
         mRelativeLayout.setVisibility(View.VISIBLE);
@@ -267,14 +280,31 @@ public class MainActivity extends AppCompatActivity implements OnListenerFavorit
     @Override
     protected void onRestart() {
         super.onRestart();
-        Log.d("tagg", "onRestart:main ");
-        upDateUi();
+        if (getSongs() == null) {
+            return;
+        } else {
+            upDateUi();
+        }
+        mMusicService.setOnListenerServer(this);
+        if (mMusicService.getState() == MediaPlayerState.PLAYING) {
+            mImgPause.setImageResource(R.drawable.ic_pause_black_24dp);
+        } else mImgPause.setImageResource(R.drawable.ic_play_arrow_black_24dp);
     }
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-        Log.d("tagg", "onStop:main ");
+    private Song getCurrentSong() {
+        return mMusicService.getCurrentSong();
+    }
+
+    private List<Song> getSongs(){
+        return mMusicService.getSongs();
+    }
+
+    private int getCurrentIndex(){
+        return mMusicService.getCurrentIndex();
+    }
+
+    private int getCurrentTime(){
+        return mMusicService.getCurrentTime();
     }
 
     @Override

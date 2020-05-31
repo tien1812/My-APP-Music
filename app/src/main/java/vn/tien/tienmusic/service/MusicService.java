@@ -67,8 +67,16 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
         return mSongs.get(mCurrentIndex);
     }
 
+    public List<Song> getSongs() {
+        return mSongs;
+    }
+
     public int getCurrentTime() {
         return mPlayer.getCurrentPosition();
+    }
+
+    public int getCurrentIndex() {
+        return mCurrentIndex;
     }
 
     public boolean isRandom() {
@@ -147,13 +155,24 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
         mCurrentIndex = position;
         stopSong();
         playSong();
-        mState = MediaPlayerState.PLAYING;
+    }
+
+    public void playingContinue(){
+        if (mState == MediaPlayerState.PLAYING) {
+            upDateUi();
+            mPlayer.start();
+            return;
+        }if (mState == MediaPlayerState.PAUSED){
+            mPlayer.pause();
+            upDateUi();
+            return;
+        }
     }
 
     public void playSong() {
         Song song = mSongs.get(mCurrentIndex);
         String url = song.getStreamUrl();
-        if (mState == MediaPlayerState.IDLE || mState == MediaPlayerState.STOPPED) {
+        if (mState == MediaPlayerState.IDLE | mState == MediaPlayerState.STOPPED) {
             try {
                 mPlayer.setDataSource(url);
                 mPlayer.prepareAsync();

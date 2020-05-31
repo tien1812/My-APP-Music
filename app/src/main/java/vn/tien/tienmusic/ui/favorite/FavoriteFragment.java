@@ -67,12 +67,12 @@ public class FavoriteFragment extends Fragment {
     private void setClickItem() {
         mAdapter.setClickListener(new ClickListenerItem() {
             @Override
-            public void onClick(Song song, int position) {
+            public void onClickItem(Song song, int position) {
                 Intent intent = PlayMusicActivity.getIntent(getContext());
                 mBundle.putInt(Constant.POSITION_SONG, position);
                 intent.putExtras(mBundle);
                 startActivity(intent);
-                mListenerItem.onClick(song,position);
+                mListenerItem.onClickItem(song,position);
             }
         });
         mAdapter.setListenerFavorite(mOnListenerFavorite);

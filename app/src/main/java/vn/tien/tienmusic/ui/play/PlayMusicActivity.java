@@ -36,7 +36,6 @@ import vn.tien.tienmusic.data.model.Song;
 import vn.tien.tienmusic.databinding.ActivityPlayBinding;
 import vn.tien.tienmusic.notification.NotificationAction;
 import vn.tien.tienmusic.service.MusicService;
-import vn.tien.tienmusic.ui.MainActivity;
 import vn.tien.tienmusic.utils.StringUtils;
 import vn.tien.tienmusic.viewmodel.SongFavViewModel;
 
@@ -61,6 +60,7 @@ public class PlayMusicActivity extends AppCompatActivity implements View.OnClick
     private UpDateSeekbar mUpDateSeekbar;
     private ImageView mImageFavorite;
     private ImageView mImgDownLoad;
+    private int mCurrentTimeSong;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -75,7 +75,6 @@ public class PlayMusicActivity extends AppCompatActivity implements View.OnClick
         setFavorite();
     }
 
-
     private void setFavorite() {
         if (mSongs.get(mPosSong).isFavorite() == 1) {
             mImageFavorite.setImageResource(R.drawable.ic_favorite_red_24dp);
@@ -85,7 +84,7 @@ public class PlayMusicActivity extends AppCompatActivity implements View.OnClick
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        overridePendingTransition(0,R.anim.back_play);
+        overridePendingTransition(0, R.anim.back_play);
     }
 
     private void initView() {
@@ -127,6 +126,7 @@ public class PlayMusicActivity extends AppCompatActivity implements View.OnClick
         Bundle bundle = getIntent().getExtras();
         mSongs = bundle.getParcelableArrayList(Constant.BUNDLE_LIST);
         mPosSong = bundle.getInt(Constant.POSITION_SONG);
+        mCurrentTimeSong = bundle.getInt(Constant.CURRENT_TIME_SONG);
     }
 
     private void setToolbar() {
@@ -155,7 +155,11 @@ public class PlayMusicActivity extends AppCompatActivity implements View.OnClick
                     mMusicService.setSongs(mSongs);
                     mMusicService.setCurrentIndex(mPosSong);
                     mMusicService.setOnListenerServer(PlayMusicActivity.this);
-                    playOrPause();
+                    if (mCurrentTimeSong == 0) {
+                        mMusicService.playSong(mPosSong);
+                    } else {
+                        playingContinue();
+                    }
                     upDateUi();
                 } else {
                     mBound = false;
@@ -249,15 +253,30 @@ public class PlayMusicActivity extends AppCompatActivity implements View.OnClick
         mMusicService.nextSong();
     }
 
+    private void playingContinue() {
+        if (!mBound) {
+            return;
+        }
+        if (mMusicService.getState() == MediaPlayerState.PLAYING) {
+            mBtnPlay.setImageResource(R.drawable.ic_pause_black_24dp);
+            mAvatarFragment.startAnimator();
+        } else {
+            mBtnPlay.setImageResource(R.drawable.ic_play_arrow_black_24dp);
+            mAvatarFragment.pauseAnimator();
+        }
+        mMusicService.playingContinue();
+    }
+
+
     private void playOrPause() {
         if (!mBound) {
             return;
         }
         if (mMusicService.getState() == MediaPlayerState.PLAYING) {
-            mBtnPlay.setImageLevel(Constant.IMAGE_LEVEL_PLAY);
+            mBtnPlay.setImageResource(R.drawable.ic_play_arrow_black_24dp);
             mAvatarFragment.pauseAnimator();
         } else {
-            mBtnPlay.setImageLevel(Constant.IMAGE_LEVEL_PAUSE);
+            mBtnPlay.setImageResource(R.drawable.ic_pause_black_24dp);
             mAvatarFragment.startAnimator();
         }
         mMusicService.playSong();
@@ -283,6 +302,13 @@ public class PlayMusicActivity extends AppCompatActivity implements View.OnClick
                 String time = StringUtils.formatDuration(getCurrentSong().getDuration());
                 mTextDuration.setText(time);
                 mSeekBar.setMax(getCurrentSong().getDuration());
+                if (mMusicService.getState() == MediaPlayerState.PLAYING) {
+                    mBtnPlay.setImageResource(R.drawable.ic_pause_black_24dp);
+                    mAvatarFragment.startAnimator();
+                } else {
+                    mBtnPlay.setImageResource(R.drawable.ic_play_arrow_black_24dp);
+                    mAvatarFragment.pauseAnimator();
+                }
             }
         });
     }
@@ -348,6 +374,10 @@ public class PlayMusicActivity extends AppCompatActivity implements View.OnClick
 
         @Override
         protected void onProgressUpdate(Void... values) {
+            if (mCurrentTimeSong != 0) {
+                mTextTime.setText(StringUtils.formatDuration(mCurrentTimeSong));
+                mSeekBar.setProgress(mCurrentTimeSong);
+            }
             mTextTime.setText(StringUtils.formatDuration(mMusicService.getCurrentTime()));
             mSeekBar.setProgress(mMusicService.getCurrentTime());
         }

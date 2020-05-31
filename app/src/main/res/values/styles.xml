@@ -9,7 +9,8 @@
     </style>
 
     <style name="MyTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="colorAccent">@color/color_white</item>
+        <item name="colorPrimary">@color/color_white</item>
+        <item name="colorAccent">@color/color_pink</item>
         <item name="colorPrimaryDark">@color/color_gray</item>
     </style>
 

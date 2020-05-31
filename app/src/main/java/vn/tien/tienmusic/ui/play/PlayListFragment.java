@@ -58,7 +58,7 @@ public class PlayListFragment extends Fragment {
         mRecyclerPlaylist.setItemViewCacheSize(Constant.CACHE_SIZE);
         mListAdapter.setClickListener(new ClickListenerItem() {
             @Override
-            public void onClick(Song song, int position) {
+            public void onClickItem(Song song, int position) {
                 mListenerItemPlaylist.onClick(position);
             }
         });

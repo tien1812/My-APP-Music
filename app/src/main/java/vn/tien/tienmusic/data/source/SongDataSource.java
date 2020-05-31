@@ -1,5 +1,7 @@
 package vn.tien.tienmusic.data.source;
 
+import androidx.databinding.ObservableList;
+
 import java.util.List;
 
 import io.reactivex.Observable;
@@ -12,5 +14,9 @@ public interface SongDataSource {
 
     interface search {
        Observable<List<Song>> getSearchSong(String query);
+    }
+
+    interface local {
+        List<Song> getSongsLocal();
     }
 }

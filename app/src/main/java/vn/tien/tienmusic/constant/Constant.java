@@ -12,8 +12,7 @@ public class Constant {
     public static final String TYPE_ANIMATOR = "rotation";
     public static final String CLIENT_ID = "?client_id=" + BuildConfig.API_KEY;
     public static final String POSITION_SONG = "position";
-    public static final int IMAGE_LEVEL_PLAY = 1;
-    public static final int IMAGE_LEVEL_PAUSE = 4;
+    public static final String CURRENT_TIME_SONG = "time_song";
     public static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 123;
     public static final String PARA_MUSIC_GENRE = "charts?kind=top&genre=soundcloud%3Agenres%3A";
     public static final String LIMIT = "limit";

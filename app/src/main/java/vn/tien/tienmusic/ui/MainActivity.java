@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.os.Parcelable;
 import android.text.Html;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AnimationUtils;
@@ -253,12 +254,12 @@ public class MainActivity extends AppCompatActivity implements OnListenerFavorit
         Bundle bundle = new Bundle();
         bundle.putParcelableArrayList(Constant.BUNDLE_LIST,
                 (ArrayList<? extends Parcelable>) getSongs());
-        bundle.putInt(Constant.POSITION_SONG,getCurrentIndex());
-        bundle.putInt(Constant.CURRENT_TIME_SONG,getCurrentTime());
+        bundle.putInt(Constant.POSITION_SONG, getCurrentIndex());
+        bundle.putInt(Constant.CURRENT_TIME_SONG, getCurrentTime());
         Intent intent = PlayMusicActivity.getIntent(this);
         intent.putExtras(bundle);
         startActivity(intent);
-        overridePendingTransition(R.anim.start_play,0);
+        overridePendingTransition(R.anim.start_play, 0);
     }
 
     @Override
@@ -280,6 +281,7 @@ public class MainActivity extends AppCompatActivity implements OnListenerFavorit
     @Override
     protected void onRestart() {
         super.onRestart();
+        Log.d("taggg", "onRestart:main ");
         if (getSongs() == null) {
             return;
         } else {
@@ -295,20 +297,21 @@ public class MainActivity extends AppCompatActivity implements OnListenerFavorit
         return mMusicService.getCurrentSong();
     }
 
-    private List<Song> getSongs(){
+    private List<Song> getSongs() {
         return mMusicService.getSongs();
     }
 
-    private int getCurrentIndex(){
+    private int getCurrentIndex() {
         return mMusicService.getCurrentIndex();
     }
 
-    private int getCurrentTime(){
+    private int getCurrentTime() {
         return mMusicService.getCurrentTime();
     }
 
     @Override
     protected void onDestroy() {
+        Log.d("taggg", "onDestroy:main ");
         super.onDestroy();
         mBound = false;
         unbindService(mServiceConnection);

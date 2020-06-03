@@ -18,6 +18,8 @@ import android.widget.SeekBar;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 
+import com.masoudss.lib.WaveformSeekBar;
+
 import java.io.IOException;
 import java.util.List;
 import java.util.Random;

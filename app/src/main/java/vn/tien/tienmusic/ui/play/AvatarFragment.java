@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
 import android.view.animation.LinearInterpolator;
 import android.widget.TextView;
 
@@ -20,6 +21,8 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import vn.tien.tienmusic.R;
 import vn.tien.tienmusic.constant.Constant;
 import vn.tien.tienmusic.databinding.FragmentAvatarBinding;
+
+import static vn.tien.tienmusic.R.anim.translate;
 
 public class AvatarFragment extends Fragment {
     private FragmentAvatarBinding mAvatarBinding;
@@ -58,6 +61,8 @@ public class AvatarFragment extends Fragment {
         mAnimator.setRepeatCount(ValueAnimator.INFINITE);
         mAnimator.setInterpolator(new LinearInterpolator());
         mAnimator.start();
+
+        mTextTitle.startAnimation(AnimationUtils.loadAnimation(getContext(), translate));
     }
 
     public void pauseAnimator(){

@@ -54,6 +54,7 @@ public class TrackFragment extends Fragment {
                 R.layout.fragment_track, container, false);
         mBinding.setBinding(this);
         mBundle = new Bundle();
+        setUpRecycler();
         Log.d("tag", "onCreateView: ");
         return mBinding.getRoot();
     }
@@ -66,9 +67,9 @@ public class TrackFragment extends Fragment {
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-        setUpRecycler();
+    public void onResume() {
+        super.onResume();
+        setClickItem();
     }
 
     private void setUpRecycler() {
@@ -112,6 +113,9 @@ public class TrackFragment extends Fragment {
                 DividerItemDecoration.VERTICAL);
         mRecyclerSongs.addItemDecoration(dividerItemDecoration);
         mRecyclerSongs.setItemViewCacheSize(Constant.CACHE_SIZE);
+    }
+
+    private void setClickItem() {
         mTrackAdapter.setClickListener(new ClickListenerItem() {
             @Override
             public void onClickItem(Song song, int position) {
@@ -119,7 +123,7 @@ public class TrackFragment extends Fragment {
                 mBundle.putInt(Constant.POSITION_SONG, position);
                 mIntent.putExtras(mBundle);
                 startActivity(mIntent);
-                mListenerItem.onClickItem(song,position);
+                mListenerItem.onClickItem(song, position);
             }
         });
         mTrackAdapter.setListenerFavorite(mOnListenerFavorite);

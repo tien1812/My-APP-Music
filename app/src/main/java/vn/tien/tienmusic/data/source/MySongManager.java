@@ -6,14 +6,9 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.provider.MediaStore;
 
-import androidx.databinding.ObservableList;
-import androidx.lifecycle.LiveData;
-
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Observer;
 
-import io.reactivex.Observable;
 import vn.tien.tienmusic.data.model.Song;
 import vn.tien.tienmusic.data.model.User;
 
@@ -26,14 +21,14 @@ public class MySongManager {
         mContext = context;
     }
 
-    public static MySongManager getInstance(Context context){
-        if (sMySongManager == null){
+    public static MySongManager getInstance(Context context) {
+        if (sMySongManager == null) {
             sMySongManager = new MySongManager(context);
         }
         return sMySongManager;
     }
 
-    public List<Song> getSongLocal(){
+    public List<Song> getSongLocal() {
         mSongs = new ArrayList<>();
         ContentResolver resolver = mContext.getContentResolver();
         Uri musicUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;

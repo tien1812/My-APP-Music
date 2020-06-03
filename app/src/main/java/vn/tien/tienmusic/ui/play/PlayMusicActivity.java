@@ -83,8 +83,8 @@ public class PlayMusicActivity extends AppCompatActivity implements View.OnClick
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
         overridePendingTransition(0, R.anim.back_play);
+        super.onBackPressed();
     }
 
     private void initView() {

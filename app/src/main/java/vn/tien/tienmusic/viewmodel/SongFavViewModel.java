@@ -19,14 +19,12 @@ import vn.tien.tienmusic.data.repository.SongFavRepository;
 public class SongFavViewModel extends AndroidViewModel {
     private SongFavRepository mFavRepository;
     private LiveData<List<Song>> mSongs;
-    private CompositeDisposable mCompositeDisposable;
     private Context mContext;
 
     public SongFavViewModel(@NonNull Application application) {
         super(application);
         mFavRepository = new SongFavRepository(application);
         mSongs = mFavRepository.getFavSongs();
-        mCompositeDisposable = new CompositeDisposable();
         mContext = application;
     }
 

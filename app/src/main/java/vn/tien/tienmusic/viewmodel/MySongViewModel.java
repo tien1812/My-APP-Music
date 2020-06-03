@@ -2,13 +2,10 @@ package vn.tien.tienmusic.viewmodel;
 
 import android.content.Context;
 
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import java.util.List;
 
-import io.reactivex.disposables.CompositeDisposable;
 import vn.tien.tienmusic.data.model.Song;
 import vn.tien.tienmusic.data.repository.SongLocalRepository;
 import vn.tien.tienmusic.data.source.MySongManager;
@@ -22,7 +19,7 @@ public class MySongViewModel extends ViewModel {
         mSongs = mSongLocalRepository.getSongsLocal();
     }
 
-    public List<Song> getSongsLocal(){
+    public List<Song> getSongsLocal() {
         return mSongs;
     }
 }

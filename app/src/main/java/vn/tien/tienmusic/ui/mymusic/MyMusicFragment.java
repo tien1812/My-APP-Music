@@ -1,13 +1,10 @@
 package vn.tien.tienmusic.ui.mymusic;
 
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,7 +28,6 @@ import vn.tien.tienmusic.constant.ClickListenerItem;
 import vn.tien.tienmusic.constant.Constant;
 import vn.tien.tienmusic.constant.OnListenerFavorite;
 import vn.tien.tienmusic.data.model.Song;
-import vn.tien.tienmusic.data.model.User;
 import vn.tien.tienmusic.databinding.FragmentMymusicBinding;
 import vn.tien.tienmusic.ui.adapter.TrackAdapter;
 import vn.tien.tienmusic.ui.play.PlayMusicActivity;
@@ -52,13 +48,16 @@ public class MyMusicFragment extends Fragment {
         mMymusicBinding = DataBindingUtil.inflate(inflater,
                 R.layout.fragment_mymusic, container, false);
         initView();
+        setRecycleView();
         return mMymusicBinding.getRoot();
     }
 
+
     @Override
-    public void onStart() {
-        super.onStart();
-        setRecycleView();
+    public void onResume() {
+        super.onResume();
+        setClickItem();
+        Log.d("taggg", "onResume: fragment");
     }
 
     @Override
@@ -82,20 +81,6 @@ public class MyMusicFragment extends Fragment {
                 return myMusic.getTitle().compareTo(t1.getTitle());
             }
         });
-        mAdapter.setClickListener(new ClickListenerItem() {
-            @Override
-            public void onClickItem(Song song, int position) {
-                Intent intent = PlayMusicActivity.getIntent(getContext());
-                Bundle bundle = new Bundle();
-                bundle.putParcelableArrayList(Constant.BUNDLE_LIST,
-                        (ArrayList<? extends Parcelable>) mSongs);
-                bundle.putInt(Constant.POSITION_SONG, position);
-                intent.putExtras(bundle);
-                startActivity(intent);
-                mListenerItem.onClickItem(song,position);
-            }
-        });
-        mAdapter.setListenerFavorite(mOnListenerFavorite);
     }
 
     private void initView() {
@@ -106,5 +91,22 @@ public class MyMusicFragment extends Fragment {
         mAdapter = new TrackAdapter();
         mSongs.addAll(mSongViewModel.getSongsLocal());
         mAdapter.setData(mSongs);
+    }
+
+    private void setClickItem() {
+        mAdapter.setClickListener(new ClickListenerItem() {
+            @Override
+            public void onClickItem(Song song, int position) {
+                Intent intent = PlayMusicActivity.getIntent(getContext());
+                Bundle bundle = new Bundle();
+                bundle.putParcelableArrayList(Constant.BUNDLE_LIST,
+                        (ArrayList<? extends Parcelable>) mSongs);
+                bundle.putInt(Constant.POSITION_SONG, position);
+                intent.putExtras(bundle);
+                startActivity(intent);
+                mListenerItem.onClickItem(song, position);
+            }
+        });
+        mAdapter.setListenerFavorite(mOnListenerFavorite);
     }
 }

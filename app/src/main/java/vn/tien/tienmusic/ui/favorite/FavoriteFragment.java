@@ -47,13 +47,13 @@ public class FavoriteFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mFavoriteBinding = DataBindingUtil.inflate(inflater,
                 R.layout.fragment_favorite, container, false);
+        initView();
         return mFavoriteBinding.getRoot();
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-        initView();
+    public void onResume() {
+        super.onResume();
         setClickItem();
     }
 
@@ -72,7 +72,7 @@ public class FavoriteFragment extends Fragment {
                 mBundle.putInt(Constant.POSITION_SONG, position);
                 intent.putExtras(mBundle);
                 startActivity(intent);
-                mListenerItem.onClickItem(song,position);
+                mListenerItem.onClickItem(song, position);
             }
         });
         mAdapter.setListenerFavorite(mOnListenerFavorite);

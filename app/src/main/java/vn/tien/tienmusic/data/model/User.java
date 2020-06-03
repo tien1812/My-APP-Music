@@ -1,5 +1,7 @@
 package vn.tien.tienmusic.data.model;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.widget.ImageView;
@@ -56,7 +58,6 @@ public class User extends BaseObservable implements Parcelable {
         mID = ID;
     }
 
-
     @Bindable
     public String getUserName() {
         return mUserName;
@@ -72,8 +73,8 @@ public class User extends BaseObservable implements Parcelable {
     }
 
     @BindingAdapter({"mAvatarUrl"})
-    public static void loadImage(ImageView view, String imagUrl) {
-        Glide.with(view.getContext()).load(imagUrl).placeholder(R.drawable.cd).into(view);
+    public static void loadImage(ImageView view, String imageUrl) {
+        Glide.with(view.getContext()).load(imageUrl).placeholder(R.drawable.cd).into(view);
     }
 
     public void setAvatarUrl(String avatarUrl) {

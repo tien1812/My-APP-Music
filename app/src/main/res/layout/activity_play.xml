@@ -13,7 +13,7 @@
         android:padding="@dimen/dp_8"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background ="@color/color_gray"
+        android:background ="@color/color_white"
         android:orientation="vertical"
         android:weightSum="10">
 
@@ -105,7 +105,7 @@
                 android:layout_marginTop="@dimen/dp_4"
                 android:layout_marginBottom="@dimen/dp_8"
                 android:text="@string/time"
-                android:textColor="@color/color_white"
+                android:textColor="@color/color_black"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toTopOf="@+id/image_random"
                 app:layout_constraintStart_toStartOf="parent"
@@ -119,7 +119,7 @@
                 android:layout_marginEnd="@dimen/dp_8"
                 android:layout_marginBottom="@dimen/dp_8"
                 android:text="@string/time"
-                android:textColor="@color/color_white"
+                android:textColor="@color/color_black"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toTopOf="@+id/image_repeat"
                 app:layout_constraintEnd_toEndOf="parent"

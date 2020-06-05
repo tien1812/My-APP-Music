@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.Parcelable;
@@ -17,6 +18,7 @@ import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -50,6 +52,7 @@ import vn.tien.tienmusic.ui.mymusic.MyMusicFragment;
 import vn.tien.tienmusic.ui.play.PlayMusicActivity;
 import vn.tien.tienmusic.ui.search.SearchFragment;
 import vn.tien.tienmusic.ui.track.TrackFragment;
+import vn.tien.tienmusic.utils.StringUtils;
 import vn.tien.tienmusic.viewmodel.SongFavViewModel;
 
 public class MainActivity extends AppCompatActivity implements OnListenerFavorite, ListenerServer,
@@ -223,6 +226,9 @@ public class MainActivity extends AppCompatActivity implements OnListenerFavorit
 
     @Override
     public void upDateUi() {
+        if (!mBound){
+            return;
+        }
         this.runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -256,17 +262,23 @@ public class MainActivity extends AppCompatActivity implements OnListenerFavorit
                 (ArrayList<? extends Parcelable>) getSongs());
         bundle.putInt(Constant.POSITION_SONG, getCurrentIndex());
         bundle.putInt(Constant.CURRENT_TIME_SONG, getCurrentTime());
-        Intent intent = PlayMusicActivity.getIntent(this);
+        Intent intent = new Intent(MainActivity.this, PlayMusicActivity.class);
         intent.putExtras(bundle);
         startActivity(intent);
         overridePendingTransition(R.anim.start_play, 0);
     }
 
     @Override
-    public void onClickItem(Song song, int position) {
+    public void onClickItem(List<Song> songs, int position) {
         mMusicService.stopSong();
-        mSongObservable.set(song);
+        mSongObservable.set(songs.get(position));
         updatePlayMini();
+        Intent intent = PlayMusicActivity.getIntent(this);
+        Bundle bundle = new Bundle();
+        bundle.putParcelableArrayList(Constant.BUNDLE_LIST, (ArrayList<? extends Parcelable>) songs);
+        bundle.putInt(Constant.POSITION_SONG,position);
+        intent.putExtras(bundle);
+        startActivity(intent);
     }
 
     private void updatePlayMini() {
@@ -308,6 +320,7 @@ public class MainActivity extends AppCompatActivity implements OnListenerFavorit
     private int getCurrentTime() {
         return mMusicService.getCurrentTime();
     }
+
 
     @Override
     protected void onDestroy() {

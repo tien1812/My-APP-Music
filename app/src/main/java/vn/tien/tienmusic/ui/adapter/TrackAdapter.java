@@ -66,6 +66,12 @@ public class TrackAdapter extends RecyclerView.Adapter<TrackAdapter.TrackHoder> 
                 }
             }
         });
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                sClickListener.onClickItem(mSongs,position);
+            }
+        });
     }
 
     @Override
@@ -81,15 +87,6 @@ public class TrackAdapter extends RecyclerView.Adapter<TrackAdapter.TrackHoder> 
             super(binding.getRoot());
             mBinding = binding;
             mImageFavorite = mBinding.imgFavorite;
-            binding.getRoot().setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    final int position = getAdapterPosition();
-                    if (sClickListener != null) {
-                        sClickListener.onClickItem(mBinding.getSong(), position);
-                    }
-                }
-            });
         }
 
 

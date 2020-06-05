@@ -38,7 +38,6 @@ public class FavoriteFragment extends Fragment {
     private TrackAdapter mAdapter;
     private RecyclerView mRecyclerFav;
     private SongFavViewModel mSongFavViewModel;
-    private Bundle mBundle;
     private OnListenerFavorite mOnListenerFavorite;
     private ClickListenerItem mListenerItem;
 
@@ -67,12 +66,8 @@ public class FavoriteFragment extends Fragment {
     private void setClickItem() {
         mAdapter.setClickListener(new ClickListenerItem() {
             @Override
-            public void onClickItem(Song song, int position) {
-                Intent intent = PlayMusicActivity.getIntent(getContext());
-                mBundle.putInt(Constant.POSITION_SONG, position);
-                intent.putExtras(mBundle);
-                startActivity(intent);
-                mListenerItem.onClickItem(song, position);
+            public void onClickItem(List<Song> songs, int position) {
+                mListenerItem.onClickItem(songs, position);
             }
         });
         mAdapter.setListenerFavorite(mOnListenerFavorite);
@@ -100,7 +95,6 @@ public class FavoriteFragment extends Fragment {
     }
 
     private void initView() {
-        mBundle = new Bundle();
         mRecyclerFav = mFavoriteBinding.recycleFavorite;
         mAdapter = new TrackAdapter();
         mSongFavViewModel = ViewModelProviders.of(this).get(SongFavViewModel.class);
@@ -108,8 +102,6 @@ public class FavoriteFragment extends Fragment {
             @Override
             public void onChanged(List<Song> songs) {
                 mAdapter.setData(songs);
-                mBundle.putParcelableArrayList(Constant.BUNDLE_LIST,
-                        (ArrayList<? extends Parcelable>) songs);
             }
         });
         mRecyclerFav.setAdapter(mAdapter);

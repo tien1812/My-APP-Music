@@ -34,7 +34,6 @@ import vn.tien.tienmusic.constant.OnListenerFavorite;
 import vn.tien.tienmusic.constant.OnListenerItemPlaylist;
 import vn.tien.tienmusic.data.model.Song;
 import vn.tien.tienmusic.databinding.ActivityPlayBinding;
-import vn.tien.tienmusic.notification.NotificationAction;
 import vn.tien.tienmusic.service.MusicService;
 import vn.tien.tienmusic.utils.StringUtils;
 import vn.tien.tienmusic.viewmodel.SongFavViewModel;
@@ -71,7 +70,6 @@ public class PlayMusicActivity extends AppCompatActivity implements View.OnClick
         setToolbar();
         customViewPager();
         bindtoService();
-        getIntentFromNotification();
         setFavorite();
     }
 
@@ -83,8 +81,8 @@ public class PlayMusicActivity extends AppCompatActivity implements View.OnClick
 
     @Override
     public void onBackPressed() {
-        overridePendingTransition(0, R.anim.back_play);
         super.onBackPressed();
+        overridePendingTransition(0, R.anim.back_play);
     }
 
     private void initView() {
@@ -107,19 +105,6 @@ public class PlayMusicActivity extends AppCompatActivity implements View.OnClick
         mImageFavorite.setOnClickListener(this);
         mImgDownLoad = mBinding.imageDownload;
         mSongFavViewModel = ViewModelProviders.of(this).get(SongFavViewModel.class);
-    }
-
-    private void getIntentFromNotification() {
-        Intent intent = getIntent();
-        if (intent == null) {
-            return;
-        }
-        if (intent.getAction() == null) {
-            return;
-        }
-        if (intent.getAction().equals(NotificationAction.MAIN_ACTION)) {
-            getIntent(this);
-        }
     }
 
     private void getData() {
@@ -291,9 +276,7 @@ public class PlayMusicActivity extends AppCompatActivity implements View.OnClick
         if (!mBound) {
             return;
         }
-        if (mUpDateSeekbar == null) {
-            upDateSeekbar();
-        }
+        upDateSeekbar();
         this.runOnUiThread(new Runnable() {
             @Override
             public void run() {

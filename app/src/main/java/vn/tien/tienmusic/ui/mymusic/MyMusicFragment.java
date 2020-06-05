@@ -96,15 +96,8 @@ public class MyMusicFragment extends Fragment {
     private void setClickItem() {
         mAdapter.setClickListener(new ClickListenerItem() {
             @Override
-            public void onClickItem(Song song, int position) {
-                Intent intent = PlayMusicActivity.getIntent(getContext());
-                Bundle bundle = new Bundle();
-                bundle.putParcelableArrayList(Constant.BUNDLE_LIST,
-                        (ArrayList<? extends Parcelable>) mSongs);
-                bundle.putInt(Constant.POSITION_SONG, position);
-                intent.putExtras(bundle);
-                startActivity(intent);
-                mListenerItem.onClickItem(song, position);
+            public void onClickItem(List<Song> songs, int position) {
+                mListenerItem.onClickItem(songs, position);
             }
         });
         mAdapter.setListenerFavorite(mOnListenerFavorite);

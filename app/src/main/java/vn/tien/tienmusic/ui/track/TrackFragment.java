@@ -39,8 +39,6 @@ public class TrackFragment extends Fragment {
     private TrackAdapter mTrackAdapter;
     private FragmentTrackBinding mBinding;
     private SongViewModel mSongViewModel;
-    private Bundle mBundle;
-    private Intent mIntent;
     private ProgressBar mProgressBar;
     private OnListenerFavorite mOnListenerFavorite;
     private TextView mTextView;
@@ -53,7 +51,6 @@ public class TrackFragment extends Fragment {
         mBinding = DataBindingUtil.inflate(inflater,
                 R.layout.fragment_track, container, false);
         mBinding.setBinding(this);
-        mBundle = new Bundle();
         setUpRecycler();
         Log.d("tag", "onCreateView: ");
         return mBinding.getRoot();
@@ -84,8 +81,6 @@ public class TrackFragment extends Fragment {
                     public void onChanged(List<Song> songs) {
                         mTrackAdapter.setData(songs);
                         mProgressBar.setVisibility(View.GONE);
-                        mBundle.putParcelableArrayList(Constant.BUNDLE_LIST,
-                                (ArrayList<? extends Parcelable>) songs);
                     }
                 });
             }
@@ -99,8 +94,6 @@ public class TrackFragment extends Fragment {
                 songs1.addAll(songs.subList(0, 4));
                 mTrackAdapter.setData(songs1);
                 mProgressBar.setVisibility(View.GONE);
-                mBundle.putParcelableArrayList(Constant.BUNDLE_LIST,
-                        (ArrayList<? extends Parcelable>) songs);
             }
         });
         mProgressBar = mBinding.processBar;
@@ -118,12 +111,8 @@ public class TrackFragment extends Fragment {
     private void setClickItem() {
         mTrackAdapter.setClickListener(new ClickListenerItem() {
             @Override
-            public void onClickItem(Song song, int position) {
-                mIntent = PlayMusicActivity.getIntent(getContext());
-                mBundle.putInt(Constant.POSITION_SONG, position);
-                mIntent.putExtras(mBundle);
-                startActivity(mIntent);
-                mListenerItem.onClickItem(song, position);
+            public void onClickItem(List<Song> songs, int position) {
+                mListenerItem.onClickItem(songs,position);
             }
         });
         mTrackAdapter.setListenerFavorite(mOnListenerFavorite);

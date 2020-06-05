@@ -41,8 +41,6 @@ public class SearchFragment extends Fragment implements
     private RecyclerView mRecyclerSearch;
     private SearchView mSearchView;
     private TrackAdapter mTrackAdapter;
-    private Intent mIntent;
-    private Bundle mBundle = new Bundle();
     private SearchViewModel mViewModel;
     private TextView mTextTitle, mTextKq;
     private ProgressBar mProgressBar;
@@ -83,8 +81,6 @@ public class SearchFragment extends Fragment implements
             public void onChanged(List<Song> songs) {
                 mTrackAdapter.setData(songs);
                 mProgressBar.setVisibility(View.GONE);
-                mBundle.putParcelableArrayList(Constant.BUNDLE_LIST,
-                        (ArrayList<? extends Parcelable>) songs);
             }
         });
     }
@@ -103,12 +99,8 @@ public class SearchFragment extends Fragment implements
     private void setAdapter() {
         mTrackAdapter.setClickListener(new ClickListenerItem() {
             @Override
-            public void onClickItem(Song song, int position) {
-                mIntent = PlayMusicActivity.getIntent(getContext());
-                mBundle.putInt(Constant.POSITION_SONG, position);
-                mIntent.putExtras(mBundle);
-                startActivity(mIntent);
-                mListenerItem.onClickItem(song, position);
+            public void onClickItem(List<Song> songs, int position) {
+                mListenerItem.onClickItem(songs, position);
             }
         });
         mTrackAdapter.setListenerFavorite(mOnListenerFavorite);

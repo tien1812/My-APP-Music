@@ -14,8 +14,8 @@
             android:id="@+id/image_avatar"
             android:layout_marginTop="@dimen/dp_40"
             android:layout_gravity="center"
-            android:layout_width="@dimen/dp_300"
-            android:layout_height="@dimen/dp_300"
+            android:layout_width="320dp"
+            android:layout_height="320dp"
             android:layout_centerInParent="true"
             android:scaleType="centerCrop" />
 
@@ -26,11 +26,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/dp_16"
-            android:textColor="@color/color_white" />
+            android:textColor="@color/color_black" />
 
         <TextView
             android:layout_gravity="center"
-            android:textColor="@color/color_white"
+            android:textColor="@color/color_black"
             android:id="@+id/text_artist"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

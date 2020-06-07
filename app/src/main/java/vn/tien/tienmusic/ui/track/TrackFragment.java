@@ -109,12 +109,7 @@ public class TrackFragment extends Fragment {
     }
 
     private void setClickItem() {
-        mTrackAdapter.setClickListener(new ClickListenerItem() {
-            @Override
-            public void onClickItem(List<Song> songs, int position) {
-                mListenerItem.onClickItem(songs,position);
-            }
-        });
+        mTrackAdapter.setClickListener(mListenerItem);
         mTrackAdapter.setListenerFavorite(mOnListenerFavorite);
     }
 }

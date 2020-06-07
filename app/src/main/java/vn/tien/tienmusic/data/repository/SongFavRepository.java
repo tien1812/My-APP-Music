@@ -1,6 +1,7 @@
 package vn.tien.tienmusic.data.repository;
 
 import android.app.Application;
+import android.content.Context;
 import android.os.AsyncTask;
 
 import androidx.lifecycle.LiveData;
@@ -14,6 +15,14 @@ import vn.tien.tienmusic.data.source.SongRoomDataBase;
 public class SongFavRepository {
     private SongDao mSongDao;
     private LiveData<List<Song>> mFavSongs;
+    private static SongFavRepository sSongFavRepository;
+
+    public static SongFavRepository getInstance(Application application){
+        if (sSongFavRepository == null){
+            sSongFavRepository = new SongFavRepository(application);
+        }
+        return sSongFavRepository;
+    }
 
     public SongFavRepository(Application application) {
         SongRoomDataBase dataBase = SongRoomDataBase.getInstance(application);

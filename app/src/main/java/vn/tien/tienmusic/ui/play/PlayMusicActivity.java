@@ -276,7 +276,9 @@ public class PlayMusicActivity extends AppCompatActivity implements View.OnClick
         if (!mBound) {
             return;
         }
-        upDateSeekbar();
+        if(mUpDateSeekbar ==null){
+            upDateSeekbar();
+        }
         this.runOnUiThread(new Runnable() {
             @Override
             public void run() {

@@ -23,7 +23,7 @@ public class SongFavViewModel extends AndroidViewModel {
 
     public SongFavViewModel(@NonNull Application application) {
         super(application);
-        mFavRepository = new SongFavRepository(application);
+        mFavRepository = SongFavRepository.getInstance(application);
         mSongs = mFavRepository.getFavSongs();
         mContext = application;
     }

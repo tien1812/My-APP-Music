@@ -7,7 +7,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.Parcelable;
@@ -18,7 +17,6 @@ import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -52,7 +50,6 @@ import vn.tien.tienmusic.ui.mymusic.MyMusicFragment;
 import vn.tien.tienmusic.ui.play.PlayMusicActivity;
 import vn.tien.tienmusic.ui.search.SearchFragment;
 import vn.tien.tienmusic.ui.track.TrackFragment;
-import vn.tien.tienmusic.utils.StringUtils;
 import vn.tien.tienmusic.viewmodel.SongFavViewModel;
 
 public class MainActivity extends AppCompatActivity implements OnListenerFavorite, ListenerServer,
@@ -226,7 +223,7 @@ public class MainActivity extends AppCompatActivity implements OnListenerFavorit
 
     @Override
     public void upDateUi() {
-        if (!mBound){
+        if (!mBound) {
             return;
         }
         this.runOnUiThread(new Runnable() {
@@ -276,7 +273,7 @@ public class MainActivity extends AppCompatActivity implements OnListenerFavorit
         Intent intent = PlayMusicActivity.getIntent(this);
         Bundle bundle = new Bundle();
         bundle.putParcelableArrayList(Constant.BUNDLE_LIST, (ArrayList<? extends Parcelable>) songs);
-        bundle.putInt(Constant.POSITION_SONG,position);
+        bundle.putInt(Constant.POSITION_SONG, position);
         intent.putExtras(bundle);
         startActivity(intent);
     }
